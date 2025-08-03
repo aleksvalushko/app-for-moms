@@ -2,12 +2,19 @@ import {Tabs} from "expo-router";
 import {FontAwesome} from "@expo/vector-icons";
 import {View, Text} from "react-native";
 
-const TabIcon = ({focused, color, icon, title}) => {
+type Props = {
+    focused: boolean;
+    color: string;
+    icon: any;
+    title: string;
+}
+
+const TabIcon = ({focused, color, icon, title}: Props) => {
     if (focused) {
         return (
             <View className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden">
                 <FontAwesome size={24} name={icon} color={color} />
-                <Text className="text-white font-semibold ml-2">{title}</Text>
+                <Text className="text-activeTab font-semibold ml-2">{title}</Text>
             </View>
         )
     } else {
@@ -22,6 +29,7 @@ const TabIcon = ({focused, color, icon, title}) => {
 const _Layout = () => {
     return <Tabs screenOptions={{
         tabBarActiveTintColor: '#4575D4',
+        tabBarInactiveTintColor: 'white',
         tabBarActiveBackgroundColor: '#6B8FD4',
         tabBarShowLabel: false,
         tabBarItemStyle: {
@@ -32,35 +40,30 @@ const _Layout = () => {
         },
         tabBarStyle: {
             height: 60,
-            marginHorizontal: 10,
-            marginBottom: 36,
-            position: 'absolute',
-            bottom: 10,
-            borderRadius: 50,
             backgroundColor: '#05296E',
             overflow: 'hidden',
         }
     }}>
         <Tabs.Screen name="index" options={{
-            title: 'Home',
+            title: 'Домой',
             headerShown: false,
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Home" />
+            tabBarItemStyle: {
+                width: '100%',
+                height: '100%',
+                flexDirection: 'row'
+            },
+            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой" />
         }}/>
         <Tabs.Screen name="settings" options={{
-            title: 'Settings',
+            title: 'Настройки',
             headerShown: false,
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Settings" />
+            tabBarItemStyle: {
+                width: '100%',
+                height: '100%',
+                flexDirection: 'row'
+            },
+            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Настройки" />
         }}/>
-        {/*tabBarIcon: ({color}) => <FontAwesome size={28} name="home" color={color}/>*/}
-        {/*<Tabs.Screen name="search" options={{ title: 'Search', headerShown: false, tabBarIcon: ({focused}) => (*/}
-        {/*        <TabIcon focused={focused} icon={icons.search} title="Search" />*/}
-        {/*    ) }} />*/}
-        {/*<Tabs.Screen name="saved" options={{ title: 'Saved', headerShown: false, tabBarIcon: ({focused}) => (*/}
-        {/*        <TabIcon focused={focused} icon={icons.save} title="Saved" />*/}
-        {/*    ) }} />*/}
-        {/*<Tabs.Screen name="profile" options={{ title: 'Profile', headerShown: false, tabBarIcon: ({focused}) => (*/}
-        {/*        <TabIcon focused={focused} icon={icons.person} title="Profile" />*/}
-        {/*    ) }} />*/}
     </Tabs>
 }
 

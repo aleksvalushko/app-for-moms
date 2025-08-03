@@ -10,6 +10,9 @@ module.exports = {
         positive: '#21ba45',
         negative: '#c10015',
         info: '#31ccec',
+        activeTab: '#4575D4',
+        closeBtn: '#999aa1',
+        deleteBtn: '#f44336',
         warning: '#f2c037',
         light: {
           100: '#a7b9cd',
