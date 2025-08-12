@@ -14,7 +14,9 @@ const FamilyMember = ({newFamilyMember, setNewFamilyMember}: PROPS) => {
                 style={styles.input}
                 onChangeText={setNewFamilyMember}
                 value={newFamilyMember}
+                autoFocus
                 placeholder="Например: Екатерина"
+                placeholderTextColor="lightgrey"
             />
         </View>
     );

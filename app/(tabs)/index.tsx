@@ -66,22 +66,18 @@ export default function Index() {
         if (index >= 0) {
             familyMembers.splice(index, 1);
         }
-        console.log(familyMembers)
     };
 
     const renderItem = ({item}: {item: ItemData}) => {
-        const backgroundColor = item.id === selectedId ? '#4371d6' : '#6B8FD4';
-        const color = item.id === selectedId ? 'white' : 'black';
-
         return (
-            <View style={[styles.item, {backgroundColor}]}>
+            <View style={styles.item}>
                 <Item
                     item={item}
                     onPress={() => setSelectedId(item.id)}
-                    backgroundColor={backgroundColor}
-                    textColor={color}
+                    backgroundColor='#6B8FD4'
+                    textColor='black'
                 />
-                <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)} style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)} className='flex-1 justify-center items-center'>
                     <View>
                         <AntDesign name="delete" size={24} color="white" />
                     </View>
@@ -91,9 +87,7 @@ export default function Index() {
     };
 
     return (
-        <View
-            style={{flex: 1, justifyContent: "center", alignItems: "center"}}
-        >
+        <SafeAreaView className='flex-1 justify-center items-center'>
             <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
                 <Text>Добавить члена семьи</Text>
             </Pressable>
@@ -111,7 +105,7 @@ export default function Index() {
                 <View className='bg-white w-full p-4 rounded-xl'>
                     <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
                     <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={addFamilyMember} className='bg-primary' style={styles.dialogButton} disabled={!newFamilyMember}>
+                        <TouchableHighlight onPress={() => addFamilyMember()} className='bg-primary' style={styles.dialogButton} disabled={!newFamilyMember}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Добавить</Text>
                             </View>
@@ -141,7 +135,7 @@ export default function Index() {
                     </View>
                 </View>
             </ModalWrapper>
-        </View>
+        </SafeAreaView>
     );
 }
 

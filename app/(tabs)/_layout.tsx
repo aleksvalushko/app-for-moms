@@ -49,7 +49,7 @@ const _Layout = () => {
             headerShown: false,
             tabBarItemStyle: {
                 width: '100%',
-                height: '100%',
+                height: 60,
                 flexDirection: 'row'
             },
             tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой" />
@@ -59,7 +59,7 @@ const _Layout = () => {
             headerShown: false,
             tabBarItemStyle: {
                 width: '100%',
-                height: '100%',
+                height: 60,
                 flexDirection: 'row'
             },
             tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Настройки" />
