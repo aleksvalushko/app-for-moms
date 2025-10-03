@@ -1,6 +1,5 @@
 import {
     FlatList,
-    SafeAreaView,
     View,
     StyleSheet,
     TouchableOpacity,
@@ -10,7 +9,7 @@ import {
 import {useState} from "react";
 import ModalWrapper from "@/app/modals/ModalWrapper";
 import FamilyMember from "@/app/components/FamilyMember";
-import {SafeAreaProvider} from "react-native-safe-area-context";
+import {SafeAreaView, SafeAreaProvider} from "react-native-safe-area-context";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DeleteFamilyMember from "@/app/components/DeleteFamilyMember";
 
@@ -29,15 +28,30 @@ type ItemProps = {
     onPress: () => void;
     backgroundColor: string;
     textColor: string;
+    chooseFamilyMemberForDeleting: (item: ItemData) => void;
 };
 
-const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
-    <TouchableOpacity onPress={onPress} style={{backgroundColor, flex: 6}}>
-        <Text style={[styles.title, {color: textColor}]}>{item.name}</Text>
-    </TouchableOpacity>
+const Item = ({item, onPress, backgroundColor, textColor, chooseFamilyMemberForDeleting}: ItemProps) => (
+    <View style={styles.item}>
+        <TouchableOpacity onPress={onPress} style={{backgroundColor, flex: 6}}>
+            <Text style={[styles.title, {color: textColor}]}>{item.name}</Text>
+        </TouchableOpacity>
+        <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)}
+                            className='flex-1 justify-center items-center'>
+            <View>
+                <AntDesign name="edit" size={24} color="white"/>
+            </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)}
+                            className='flex-1 justify-center items-center'>
+            <View>
+                <AntDesign name="delete" size={24} color="white"/>
+            </View>
+        </TouchableHighlight>
+    </View>
 );
 
-export default function Index() {
+export const Index = () => {
     const [isShowAddFamilyMemberModal, setIsShowAddFamilyMemberModal] = useState<boolean>(false);
     const [isShowDeleteFamilyMemberModal, setIsShowDeleteFamilyMemberModal] = useState<boolean>(false);
     const [deletingFamilyMember, setDeletingFamilyMember] = useState<familyMemberProps>({id: '', name: ''});
@@ -49,7 +63,7 @@ export default function Index() {
         return Math.random().toString(36).substring(2, length + 2);
     }
 
-    const addFamilyMember = () => {
+    const addFamilyMember = async () => {
         setIsShowAddFamilyMemberModal(false);
         setFamilyMembers([...familyMembers, {id: generateRandomId(10), name: newFamilyMember}]);
         setNewFamilyMember('');
@@ -68,22 +82,16 @@ export default function Index() {
         }
     };
 
-    const renderItem = ({item}: {item: ItemData}) => {
+    const renderItem = ({item}: { item: ItemData }) => {
         return (
-            <View style={styles.item}>
-                <Item
-                    item={item}
-                    onPress={() => setSelectedId(item.id)}
-                    backgroundColor='#6B8FD4'
-                    textColor='black'
-                />
-                <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)} className='flex-1 justify-center items-center'>
-                    <View>
-                        <AntDesign name="delete" size={24} color="white" />
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
+            <Item
+                item={item}
+                onPress={() => setSelectedId(item.id)}
+                backgroundColor='#6B8FD4'
+                textColor='black'
+                chooseFamilyMemberForDeleting={chooseFamilyMemberForDeleting}
+            />
+        )
     };
 
     return (
@@ -98,6 +106,7 @@ export default function Index() {
                         data={familyMembers}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
+                        extraData={selectedId}
                     />
                 </SafeAreaView>
             </SafeAreaProvider>
@@ -105,12 +114,14 @@ export default function Index() {
                 <View className='bg-white w-full p-4 rounded-xl'>
                     <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
                     <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={() => addFamilyMember()} className='bg-primary' style={styles.dialogButton} disabled={!newFamilyMember}>
+                        <TouchableHighlight onPress={() => addFamilyMember()} className='bg-primary'
+                                            style={styles.dialogButton} disabled={!newFamilyMember}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Добавить</Text>
                             </View>
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => setIsShowAddFamilyMemberModal(false)} className='bg-closeBtn' style={styles.dialogButton}>
+                        <TouchableHighlight onPress={() => setIsShowAddFamilyMemberModal(false)} className='bg-closeBtn'
+                                            style={styles.dialogButton}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Закрыть</Text>
                             </View>
@@ -120,14 +131,16 @@ export default function Index() {
             </ModalWrapper>
             <ModalWrapper isOpen={isShowDeleteFamilyMemberModal}>
                 <View className='bg-white w-full p-4 rounded-xl'>
-                    <DeleteFamilyMember name={deletingFamilyMember?.name} />
+                    <DeleteFamilyMember name={deletingFamilyMember?.name}/>
                     <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={() => deleteFamilyMember(deletingFamilyMember)} className='bg-deleteBtn' style={styles.dialogButton}>
+                        <TouchableHighlight onPress={() => deleteFamilyMember(deletingFamilyMember)}
+                                            className='bg-deleteBtn' style={styles.dialogButton}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Удалить</Text>
                             </View>
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => setIsShowDeleteFamilyMemberModal(false)} className='bg-closeBtn' style={styles.dialogButton}>
+                        <TouchableHighlight onPress={() => setIsShowDeleteFamilyMemberModal(false)}
+                                            className='bg-closeBtn' style={styles.dialogButton}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Отменить</Text>
                             </View>
@@ -138,6 +151,8 @@ export default function Index() {
         </SafeAreaView>
     );
 }
+
+export default Index;
 
 const styles = StyleSheet.create({
     addFamilyMemberButton: {
