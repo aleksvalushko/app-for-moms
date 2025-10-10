@@ -1,6 +1,7 @@
 import {Tabs} from "expo-router";
 import {FontAwesome} from "@expo/vector-icons";
 import {View, Text} from "react-native";
+import React from "react";
 
 type Props = {
     focused: boolean;
@@ -9,18 +10,19 @@ type Props = {
     title: string;
 }
 
-const TabIcon = ({focused, color, icon, title}: Props) => {
+const TabIcon: React.FC<Props> = ({focused, color, icon, title}: Props) => {
     if (focused) {
         return (
-            <View className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden">
-                <FontAwesome size={24} name={icon} color={color} />
+            <View
+                className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden">
+                <FontAwesome size={24} name={icon} color={color}/>
                 <Text className="text-activeTab font-semibold ml-2">{title}</Text>
             </View>
         )
     } else {
         return (
             <View className="size-full justify-center items-center mt-4 text-white rounded-full">
-                <FontAwesome size={24} name={icon} color={color} />
+                <FontAwesome size={24} name={icon} color={color}/>
             </View>
         )
     }
@@ -52,7 +54,7 @@ const _Layout = () => {
                 height: 60,
                 flexDirection: 'row'
             },
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой" />
+            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой"/>
         }}/>
         <Tabs.Screen name="settings" options={{
             title: 'Настройки',
@@ -62,7 +64,7 @@ const _Layout = () => {
                 height: 60,
                 flexDirection: 'row'
             },
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Настройки" />
+            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Настройки"/>
         }}/>
     </Tabs>
 }

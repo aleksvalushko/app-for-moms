@@ -6,29 +6,24 @@ import {
     Text,
     Pressable, TouchableHighlight
 } from "react-native";
-import {useState} from "react";
+import React, {useState} from "react";
 import ModalWrapper from "@/app/modals/ModalWrapper";
-import FamilyMember from "@/app/components/FamilyMember";
+import FamilyMember from "@/components/FamilyMember";
 import {SafeAreaView, SafeAreaProvider} from "react-native-safe-area-context";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import DeleteFamilyMember from "@/app/components/DeleteFamilyMember";
+import DeleteFamilyMember from "@/components/DeleteFamilyMember";
 
 type familyMemberProps = {
     id: string;
     name: string;
 }
 
-type ItemData = {
-    id: string;
-    name: string;
-};
-
 type ItemProps = {
-    item: ItemData;
+    item: familyMemberProps;
     onPress: () => void;
     backgroundColor: string;
     textColor: string;
-    chooseFamilyMemberForDeleting: (item: ItemData) => void;
+    chooseFamilyMemberForDeleting: (item: familyMemberProps) => void;
 };
 
 const Item = ({item, onPress, backgroundColor, textColor, chooseFamilyMemberForDeleting}: ItemProps) => (
@@ -59,6 +54,46 @@ export const Index = () => {
     const [newFamilyMember, setNewFamilyMember] = useState('');
     const [selectedId, setSelectedId] = useState<string>();
 
+    // const auth = getAuth();
+    // const user = auth.currentUser;
+    // const familyCollection = collection(db, 'family')
+
+    // useEffect(() => {
+    //     getFamilyMembers()
+    // }, [user]);
+    //
+    // const getFamilyMembers = async () => {
+    //     if (user) {
+    //         const q = query(familyCollection, where('userId', '==', user.uid));
+    //         const data = await getDocs(q);
+    //         setFamilyMembers(data.docs.map(doc => ({...doc.data(), id: doc.id})) as familyMemberProps[])
+    //     } else {
+    //         console.log('Пользователь не залогинен.')
+    //     }
+    // }
+    //
+    // const addFamilyMembers = async () => {
+    //     if (user) {
+    //         await addDoc(familyCollection, {name: newFamilyMember, userId: user.uid});
+    //         setNewFamilyMember('');
+    //         await getFamilyMembers();
+    //     } else {
+    //         console.log('Пользователь не залогинен.')
+    //     }
+    // }
+    //
+    // const updateFamilyMembers = async (selectedId: string) => {
+    //     const familyMemberDoc = doc(db, 'family', selectedId);
+    //         await updateDoc(familyMemberDoc, {name: newFamilyMember});
+    //         await getFamilyMembers();
+    // }
+    //
+    // const deleteFamilyMembers = async (selectedId: string) => {
+    //     const familyMemberDoc = doc(db, 'family', selectedId);
+    //         await deleteDoc(familyMemberDoc);
+    //         await getFamilyMembers();
+    // }
+
     const generateRandomId = (length = 6) => {
         return Math.random().toString(36).substring(2, length + 2);
     }
@@ -76,13 +111,10 @@ export const Index = () => {
 
     const deleteFamilyMember = (item: familyMemberProps) => {
         setIsShowDeleteFamilyMemberModal(false);
-        const index = familyMembers.findIndex(elem => elem.id === item?.id);
-        if (index >= 0) {
-            familyMembers.splice(index, 1);
-        }
+        setFamilyMembers(familyMembers.filter(member => member.id !== item.id));
     };
 
-    const renderItem = ({item}: { item: ItemData }) => {
+    const renderItem = ({item}: { item: familyMemberProps }) => {
         return (
             <Item
                 item={item}

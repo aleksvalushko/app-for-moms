@@ -1,11 +1,12 @@
 import {Modal, ModalProps, KeyboardAvoidingView, View, Platform} from 'react-native';
+import React from "react";
 
 type PROPS = ModalProps & {
     isOpen: boolean;
     withInput?: boolean;
 };
 
-const ModalWrapper = ({isOpen, withInput, children, ...rest}: PROPS) => {
+const ModalWrapper: React.FC<PROPS> = ({isOpen, withInput, children}: PROPS) => {
     const content = withInput ?
         (
             <KeyboardAvoidingView
@@ -22,7 +23,7 @@ const ModalWrapper = ({isOpen, withInput, children, ...rest}: PROPS) => {
         )
 
     return (
-        <Modal visible={isOpen} transparent animationType='fade' statusBarTranslucent {...rest}>
+        <Modal visible={isOpen} transparent animationType='fade' statusBarTranslucent>
             {content}
         </Modal>
     );
