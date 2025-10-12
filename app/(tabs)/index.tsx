@@ -54,59 +54,25 @@ export const Index = () => {
     const [newFamilyMember, setNewFamilyMember] = useState('');
     const [selectedId, setSelectedId] = useState<string>();
 
-    // const auth = getAuth();
-    // const user = auth.currentUser;
-    // const familyCollection = collection(db, 'family')
-
-    // useEffect(() => {
-    //     getFamilyMembers()
-    // }, [user]);
-    //
-    // const getFamilyMembers = async () => {
-    //     if (user) {
-    //         const q = query(familyCollection, where('userId', '==', user.uid));
-    //         const data = await getDocs(q);
-    //         setFamilyMembers(data.docs.map(doc => ({...doc.data(), id: doc.id})) as familyMemberProps[])
-    //     } else {
-    //         console.log('Пользователь не залогинен.')
-    //     }
-    // }
-    //
-    // const addFamilyMembers = async () => {
-    //     if (user) {
-    //         await addDoc(familyCollection, {name: newFamilyMember, userId: user.uid});
-    //         setNewFamilyMember('');
-    //         await getFamilyMembers();
-    //     } else {
-    //         console.log('Пользователь не залогинен.')
-    //     }
-    // }
-    //
-    // const updateFamilyMembers = async (selectedId: string) => {
-    //     const familyMemberDoc = doc(db, 'family', selectedId);
-    //         await updateDoc(familyMemberDoc, {name: newFamilyMember});
-    //         await getFamilyMembers();
-    // }
-    //
-    // const deleteFamilyMembers = async (selectedId: string) => {
-    //     const familyMemberDoc = doc(db, 'family', selectedId);
-    //         await deleteDoc(familyMemberDoc);
-    //         await getFamilyMembers();
-    // }
-
     const generateRandomId = (length = 6) => {
         return Math.random().toString(36).substring(2, length + 2);
     }
 
-    const addFamilyMember = async () => {
+    const addFamilyMember = () => {
+        if (!newFamilyMember) return;
+
+        setFamilyMembers([...familyMembers, { id: generateRandomId(10), name: newFamilyMember }]);
+        handleCloseModal();
+    };
+
+    const handleCloseModal = () => {
         setIsShowAddFamilyMemberModal(false);
-        setFamilyMembers([...familyMembers, {id: generateRandomId(10), name: newFamilyMember}]);
         setNewFamilyMember('');
     };
 
     const chooseFamilyMemberForDeleting = (item: familyMemberProps) => {
-        setDeletingFamilyMember(item);
         setIsShowDeleteFamilyMemberModal(true);
+        setDeletingFamilyMember(item);
     };
 
     const deleteFamilyMember = (item: familyMemberProps) => {
@@ -121,7 +87,7 @@ export const Index = () => {
                 onPress={() => setSelectedId(item.id)}
                 backgroundColor='#6B8FD4'
                 textColor='black'
-                chooseFamilyMemberForDeleting={chooseFamilyMemberForDeleting}
+                chooseFamilyMemberForDeleting={() => chooseFamilyMemberForDeleting(item)}
             />
         )
     };
@@ -129,7 +95,7 @@ export const Index = () => {
     return (
         <SafeAreaView className='flex-1 justify-center items-center'>
             <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
-                <Text>Добавить члена семьи</Text>
+                <Text className='text-white'>Добавить члена семьи</Text>
             </Pressable>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
@@ -146,13 +112,13 @@ export const Index = () => {
                 <View className='bg-white w-full p-4 rounded-xl'>
                     <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
                     <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={() => addFamilyMember()} className='bg-primary'
+                        <TouchableHighlight onPress={addFamilyMember} className='bg-primary'
                                             style={styles.dialogButton} disabled={!newFamilyMember}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Добавить</Text>
                             </View>
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => setIsShowAddFamilyMemberModal(false)} className='bg-closeBtn'
+                        <TouchableHighlight onPress={handleCloseModal} className='bg-closeBtn'
                                             style={styles.dialogButton}>
                             <View>
                                 <Text style={styles.dialogButtonText}>Закрыть</Text>
@@ -192,7 +158,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
+        borderRadius: 8,
+        height: 40,
         // position: 'absolute',
         paddingHorizontal: 20,
         paddingVertical: 5,

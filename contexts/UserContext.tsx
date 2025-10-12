@@ -1,22 +1,28 @@
 import {createContext, useEffect, useState} from "react";
 import {ID, Models} from "react-native-appwrite";
 import {account} from "@/lib/appwrite";
+import {UserProviderProps} from "@/types";
+import {useRouter} from "expo-router";
 
-export const UserContext = createContext();
+export const UserContext = createContext<UserProviderProps>({
+    user: null, login: () => {}, register: () => {}, logout: () => {}
+});
 
-export const UserProvider = ({children}) => {
+export const UserProvider = ({children}: any) => {
+    const router = useRouter();
+
     const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
 
-    const login = async (email, password) => {
-        await account.createEmailPasswordSession({
-            email,
-            password
-        });
-        const response = await account.get();
-        setUser(response);
+    const login = async (email: string, password: string) => {
+            await account.createEmailPasswordSession({
+                email,
+                password
+            });
+            const response = await account.get();
+            setUser(response);
     };
 
-    const register = async (email, password, name) => {
+    const register = async (email: string, password: string, name: string) => {
         await account.create({
             userId: ID.unique(),
             email,
@@ -28,7 +34,7 @@ export const UserProvider = ({children}) => {
     };
 
     const logout = async () => {
-        await account.deleteSession('current')
+        await account.deleteSession('current');
         setUser(null);
     };
 
@@ -38,6 +44,7 @@ export const UserProvider = ({children}) => {
             setUser(response);
         } catch(error: any) {
             setUser(null);
+            router.replace("/(auth)/login");
         }
     };
 

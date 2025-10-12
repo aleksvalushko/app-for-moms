@@ -3,18 +3,17 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    SafeAreaView,
 } from 'react-native'
 import React, {useState} from 'react'
 import {useUser} from "@/hooks/useUser";
-import {UserProviderProps} from "@/types";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
 
-    const {login} = useUser<UserProviderProps>();
+    const {login} = useUser();
 
     const signIn = async (email: string, password: string) => {
         try {
@@ -45,7 +44,7 @@ export default Login;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#FAFAFA',

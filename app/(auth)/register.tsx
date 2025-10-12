@@ -3,11 +3,10 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    SafeAreaView,
 } from 'react-native'
 import React, {useState} from 'react'
 import {useUser} from "@/hooks/useUser";
-import {UserProviderProps} from "@/types";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -15,7 +14,7 @@ const Register = () => {
     const [name, setName] = useState('');
     const [error, setError] = useState(null);
 
-    const {register} = useUser<UserProviderProps>();
+    const {register} = useUser();
 
     const signUp = async (email: string, password: string, name: string) => {
         try {

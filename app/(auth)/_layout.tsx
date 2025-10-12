@@ -1,11 +1,11 @@
 import {useRouter} from "expo-router";
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import React, {useEffect, useState} from "react";
-import {Keyboard, SafeAreaView, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions} from "react-native";
+import {Keyboard, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions, View} from "react-native";
 import {useUser} from "@/hooks/useUser";
-import {UserProviderProps} from "@/types";
-import Login from "@/app/auth/login";
-import Register from "@/app/auth/register";
+import Login from "@/app/(auth)/login";
+import Register from "@/app/(auth)/register";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 type RoutesProps = {
     key: string;
@@ -22,7 +22,7 @@ const routes: RoutesProps[] = [
     {key: 'register', title: 'Зарегистрироваться'},
 ];
 
-const renderTabBar = props => (
+const renderTabBar = (props: any) => (
     <TabBar
         {...props}
         indicatorStyle={{backgroundColor: '#01153e'}}
@@ -34,31 +34,33 @@ const renderTabBar = props => (
 
 const AuthLayout = () => {
     const layout = useWindowDimensions();
-    const router = useRouter()
+    const router = useRouter();
 
     const [index, setIndex] = useState<number>(0);
 
-    const {user} = useUser<UserProviderProps>();
+    const {user} = useUser();
 
     useEffect(() => {
         if (user) {
             router.replace("/(tabs)");
-        } else {
-            console.log(user)
         }
     }, [user])
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Приложение для мам 👩‍🍼</Text>
-                <TabView
-                    navigationState={{index, routes}}
-                    renderScene={renderScene}
-                    renderTabBar={renderTabBar}
-                    onIndexChange={setIndex}
-                    initialLayout={{width: layout.width}}
-                />
+                <View style={styles.titleWrapper}>
+                    <Text style={styles.title}>Приложение для мам 👩‍🍼</Text>
+                </View>
+                <SafeAreaView style={{flex: 3}}>
+                    <TabView
+                        navigationState={{index, routes}}
+                        renderScene={renderScene}
+                        renderTabBar={renderTabBar}
+                        onIndexChange={setIndex}
+                        initialLayout={{width: layout.width}}
+                    />
+                </SafeAreaView>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -69,9 +71,13 @@ export default AuthLayout;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#FAFAFA',
+    },
+    titleWrapper: {
+        flex: 1,
+        justifyContent: 'center',
     },
     title: {
         fontSize: 28,
