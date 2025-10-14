@@ -2,6 +2,7 @@ import {Tabs} from "expo-router";
 import {FontAwesome} from "@expo/vector-icons";
 import {View, Text} from "react-native";
 import React from "react";
+import UserOnly from "@/components/auth/UserOnly";
 
 type Props = {
     focused: boolean;
@@ -29,44 +30,47 @@ const TabIcon: React.FC<Props> = ({focused, color, icon, title}: Props) => {
 }
 
 const _Layout = () => {
-    return <Tabs screenOptions={{
-        tabBarActiveTintColor: '#4575D4',
-        tabBarInactiveTintColor: 'white',
-        tabBarActiveBackgroundColor: '#6B8FD4',
-        tabBarShowLabel: false,
-        tabBarItemStyle: {
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        tabBarStyle: {
-            height: 60,
-            backgroundColor: '#05296E',
-            overflow: 'hidden',
-        }
-    }}>
-        <Tabs.Screen name="index" options={{
-            title: 'Домой',
-            headerShown: false,
+    return <UserOnly>
+        <Tabs screenOptions={{
+            tabBarActiveTintColor: '#4575D4',
+            tabBarInactiveTintColor: 'white',
+            tabBarActiveBackgroundColor: '#6B8FD4',
+            tabBarShowLabel: false,
             tabBarItemStyle: {
                 width: '100%',
-                height: 60,
-                flexDirection: 'row'
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
             },
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой"/>
-        }}/>
-        <Tabs.Screen name="settings" options={{
-            title: 'Настройки',
-            headerShown: false,
-            tabBarItemStyle: {
-                width: '100%',
+            tabBarStyle: {
                 height: 60,
-                flexDirection: 'row'
-            },
-            tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears" title="Настройки"/>
-        }}/>
-    </Tabs>
+                backgroundColor: '#05296E',
+                overflow: 'hidden',
+            }
+        }}>
+            <Tabs.Screen name="index" options={{
+                title: 'Домой',
+                headerShown: false,
+                tabBarItemStyle: {
+                    width: '100%',
+                    height: 60,
+                    flexDirection: 'row'
+                },
+                tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="home" title="Домой"/>
+            }}/>
+            <Tabs.Screen name="settings" options={{
+                title: 'Настройки',
+                headerShown: false,
+                tabBarItemStyle: {
+                    width: '100%',
+                    height: 60,
+                    flexDirection: 'row'
+                },
+                tabBarIcon: ({focused, color}) => <TabIcon focused={focused} color={color} icon="gears"
+                                                           title="Настройки"/>
+            }}/>
+        </Tabs>
+    </UserOnly>
 }
 
 export default _Layout;

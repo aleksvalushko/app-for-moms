@@ -1,4 +1,5 @@
 import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {useEffect, useState} from "react";
 
 type PROPS = {
     newFamilyMember: string;
@@ -6,14 +7,24 @@ type PROPS = {
 }
 
 const FamilyMember = ({newFamilyMember, setNewFamilyMember}: PROPS) => {
+    const [inputValue, setInputValue] = useState<string>('');
+
+    useEffect(() => {
+        setInputValue(newFamilyMember);
+    }, [newFamilyMember]);
+
+    const onChangeText = (text: string) => {
+        setInputValue(text);
+        setNewFamilyMember(text);
+    }
 
     return (
         <View>
             <Text>Введите имя члена семьи</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setNewFamilyMember}
-                value={newFamilyMember}
+                onChangeText={onChangeText}
+                value={inputValue}
                 autoFocus
                 placeholder="Например: Екатерина"
                 placeholderTextColor="lightgrey"

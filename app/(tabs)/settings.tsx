@@ -13,7 +13,7 @@ const Settings = () => {
         try {
             setError(null);
             await logout();
-            router.replace("/(auth)/login");
+            router.replace("/(auth)");
         } catch (error: any) {
             setError(error.message);
         }

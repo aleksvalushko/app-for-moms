@@ -3,15 +3,16 @@ import {
     View,
     StyleSheet,
     TouchableOpacity,
-    Text,
-    Pressable, TouchableHighlight
+    Pressable
 } from "react-native";
 import React, {useState} from "react";
 import ModalWrapper from "@/app/modals/ModalWrapper";
 import FamilyMember from "@/components/FamilyMember";
 import {SafeAreaView, SafeAreaProvider} from "react-native-safe-area-context";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import DeleteFamilyMember from "@/components/DeleteFamilyMember";
+import CustomTouchableHighlight from "@/components/Buttons/CustomTouchableHighlight";
+import CustomIconTouchableHighlight from "@/components/Buttons/CustomIconTouchableHighlight";
+import CustomText from "@/components/CustomText";
 
 type familyMemberProps = {
     id: string;
@@ -20,31 +21,9 @@ type familyMemberProps = {
 
 type ItemProps = {
     item: familyMemberProps;
-    onPress: () => void;
     backgroundColor: string;
     textColor: string;
-    chooseFamilyMemberForDeleting: (item: familyMemberProps) => void;
 };
-
-const Item = ({item, onPress, backgroundColor, textColor, chooseFamilyMemberForDeleting}: ItemProps) => (
-    <View style={styles.item}>
-        <TouchableOpacity onPress={onPress} style={{backgroundColor, flex: 6}}>
-            <Text style={[styles.title, {color: textColor}]}>{item.name}</Text>
-        </TouchableOpacity>
-        <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)}
-                            className='flex-1 justify-center items-center'>
-            <View>
-                <AntDesign name="edit" size={24} color="white"/>
-            </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => chooseFamilyMemberForDeleting(item)}
-                            className='flex-1 justify-center items-center'>
-            <View>
-                <AntDesign name="delete" size={24} color="white"/>
-            </View>
-        </TouchableHighlight>
-    </View>
-);
 
 export const Index = () => {
     const [isShowAddFamilyMemberModal, setIsShowAddFamilyMemberModal] = useState<boolean>(false);
@@ -61,7 +40,7 @@ export const Index = () => {
     const addFamilyMember = () => {
         if (!newFamilyMember) return;
 
-        setFamilyMembers([...familyMembers, { id: generateRandomId(10), name: newFamilyMember }]);
+        setFamilyMembers([...familyMembers, {id: generateRandomId(10), name: newFamilyMember}]);
         handleCloseModal();
     };
 
@@ -71,8 +50,8 @@ export const Index = () => {
     };
 
     const chooseFamilyMemberForDeleting = (item: familyMemberProps) => {
-        setIsShowDeleteFamilyMemberModal(true);
         setDeletingFamilyMember(item);
+        setIsShowDeleteFamilyMemberModal(true);
     };
 
     const deleteFamilyMember = (item: familyMemberProps) => {
@@ -80,74 +59,69 @@ export const Index = () => {
         setFamilyMembers(familyMembers.filter(member => member.id !== item.id));
     };
 
-    const renderItem = ({item}: { item: familyMemberProps }) => {
+
+    const Item = ({item, backgroundColor, textColor}: ItemProps) => (
+        <View style={styles.item}>
+            <TouchableOpacity onPress={() => setSelectedId(item.id)} style={{backgroundColor, flex: 6}}>
+                <CustomText style={[styles.title, {color: textColor}]}>
+                    {item.name}
+                </CustomText>
+            </TouchableOpacity>
+            <CustomIconTouchableHighlight name='edit' className='flex-1 justify-center items-center'
+                                          pressFunction={() => setIsShowAddFamilyMemberModal(true)}/>
+            <CustomIconTouchableHighlight name='delete' className='flex-1 justify-center items-center'
+                                          pressFunction={() => chooseFamilyMemberForDeleting(item)}/>
+        </View>
+    );
+
+    const RenderItem = ({item}: familyMemberProps) => {
         return (
             <Item
                 item={item}
-                onPress={() => setSelectedId(item.id)}
                 backgroundColor='#6B8FD4'
                 textColor='black'
-                chooseFamilyMemberForDeleting={() => chooseFamilyMemberForDeleting(item)}
             />
         )
     };
 
-    return (
-        <SafeAreaView className='flex-1 justify-center items-center'>
-            <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
-                <Text className='text-white'>Добавить члена семьи</Text>
-            </Pressable>
-            <SafeAreaProvider style={styles.provider}>
-                <SafeAreaView style={styles.container}>
-                    <FlatList
-                        className='w-full'
-                        data={familyMembers}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                        extraData={selectedId}
-                    />
-                </SafeAreaView>
-            </SafeAreaProvider>
-            <ModalWrapper isOpen={isShowAddFamilyMemberModal}>
-                <View className='bg-white w-full p-4 rounded-xl'>
-                    <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
-                    <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={addFamilyMember} className='bg-primary'
-                                            style={styles.dialogButton} disabled={!newFamilyMember}>
-                            <View>
-                                <Text style={styles.dialogButtonText}>Добавить</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight onPress={handleCloseModal} className='bg-closeBtn'
-                                            style={styles.dialogButton}>
-                            <View>
-                                <Text style={styles.dialogButtonText}>Закрыть</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
+    return <SafeAreaView className='flex-1 justify-center items-center'>
+        <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
+            <CustomText className='text-white'>Добавить члена семьи</CustomText>
+        </Pressable>
+        <SafeAreaProvider style={styles.provider}>
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    className='w-full'
+                    data={familyMembers}
+                    renderItem={RenderItem}
+                    keyExtractor={item => item.id}
+                    extraData={selectedId}
+                />
+            </SafeAreaView>
+        </SafeAreaProvider>
+        <ModalWrapper isOpen={isShowAddFamilyMemberModal}>
+            <View className='bg-white w-full p-4 rounded-xl'>
+                <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
+                <View className='flex-row gap-x-2 w-full justify-end'>
+                    <CustomTouchableHighlight name='Добавить' className='bg-primary' disabled={!newFamilyMember}
+                                              pressFunction={addFamilyMember}/>
+                    <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn'
+                                              pressFunction={handleCloseModal}/>
                 </View>
-            </ModalWrapper>
-            <ModalWrapper isOpen={isShowDeleteFamilyMemberModal}>
-                <View className='bg-white w-full p-4 rounded-xl'>
-                    <DeleteFamilyMember name={deletingFamilyMember?.name}/>
-                    <View className='flex-row gap-x-2 w-full justify-end'>
-                        <TouchableHighlight onPress={() => deleteFamilyMember(deletingFamilyMember)}
-                                            className='bg-deleteBtn' style={styles.dialogButton}>
-                            <View>
-                                <Text style={styles.dialogButtonText}>Удалить</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight onPress={() => setIsShowDeleteFamilyMemberModal(false)}
-                                            className='bg-closeBtn' style={styles.dialogButton}>
-                            <View>
-                                <Text style={styles.dialogButtonText}>Отменить</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
+            </View>
+        </ModalWrapper>
+        <ModalWrapper isOpen={isShowDeleteFamilyMemberModal}>
+            <View className='bg-white w-full p-4 rounded-xl'>
+                <DeleteFamilyMember familyMemberName={deletingFamilyMember?.name ?? ''}/>
+                <View className='flex-row gap-x-2 w-full justify-end'>
+                    <CustomTouchableHighlight name='Удалить' className='bg-deleteBtn'
+                                              pressFunction={() => deleteFamilyMember(deletingFamilyMember)}/>
+                    <CustomTouchableHighlight name='Отменить' className='bg-closeBtn'
+                                              pressFunction={() => setIsShowDeleteFamilyMemberModal(false)}/>
                 </View>
-            </ModalWrapper>
-        </SafeAreaView>
-    );
+            </View>
+        </ModalWrapper>
+    </SafeAreaView>
 }
 
 export default Index;

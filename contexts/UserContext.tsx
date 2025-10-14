@@ -2,15 +2,12 @@ import {createContext, useEffect, useState} from "react";
 import {ID, Models} from "react-native-appwrite";
 import {account} from "@/lib/appwrite";
 import {UserProviderProps} from "@/types";
-import {useRouter} from "expo-router";
 
 export const UserContext = createContext<UserProviderProps>({
     user: null, login: () => {}, register: () => {}, logout: () => {}
 });
 
 export const UserProvider = ({children}: any) => {
-    const router = useRouter();
-
     const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
 
     const login = async (email: string, password: string) => {
@@ -44,7 +41,6 @@ export const UserProvider = ({children}: any) => {
             setUser(response);
         } catch(error: any) {
             setUser(null);
-            router.replace("/(auth)/login");
         }
     };
 

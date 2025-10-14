@@ -1,15 +1,23 @@
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 type PROPS = {
-    name?: string;
+    familyMemberName?: string;
 }
 
-const DeleteFamilyMember = ({name}: PROPS) => {
-    return (
-        <View>
-            <Text>Вы действительно хотите удалить <b>{name}</b> из списка членов семьи?</Text>
-        </View>
-    );
+const DeleteFamilyMember = ({familyMemberName = ''}: PROPS) => {
+    return <View>
+            <Text style={styles.container}>Вы действительно хотите удалить <Text style={styles.name}>{familyMemberName}</Text> из списка членов семьи?</Text>
+        </View>;
 }
 
 export default DeleteFamilyMember;
+
+const styles = StyleSheet.create({
+    container: {
+        fontSize: 16,
+        marginBottom: 20
+    },
+    name: {
+        fontWeight: 600
+    },
+});
