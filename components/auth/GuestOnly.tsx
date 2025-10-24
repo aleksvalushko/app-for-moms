@@ -1,29 +1,34 @@
-import { useRouter } from 'expo-router'
+import {useRouter} from 'expo-router'
 import React, {ReactNode, useEffect} from 'react'
 import ThemedLoader from "../ThemeLoader";
 import {useUser} from "@/hooks/useUser";
+import {useFamilyMembers} from "@/hooks/useFamilyMembers";
 
 type UserOnlyProps = {
-  children: ReactNode;
+    children: ReactNode;
 }
 
-const GuestOnly: React.FC<UserOnlyProps> = ({ children }) => {
-  const { user } = useUser()
-  const router = useRouter()
-  
-  useEffect(() => {
-    if (user !== null) {
-      router.replace("/(tabs)")
+const GuestOnly: React.FC<UserOnlyProps> = ({children}) => {
+    const {user} = useUser()
+    const {loading} = useFamilyMembers();
+    const router = useRouter()
+
+    useEffect(() => {
+        if (user !== null) {
+            router.replace("/(tabs)")
+        }
+    }, [user])
+
+    if (user) {
+        return (
+            <ThemedLoader loading={loading}/>
+        )
     }
-  }, [user])
 
-  if (user) {
-    return (
-      <ThemedLoader />
-    )
-  }
-
-  return children
+    return <>
+        {children}
+        <ThemedLoader loading={loading}/>
+    </>
 }
 
 export default GuestOnly

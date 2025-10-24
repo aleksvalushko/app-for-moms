@@ -43,9 +43,15 @@ const _Layout = () => {
                 alignItems: 'center'
             },
             tabBarStyle: {
-                height: 60,
+                display: 'flex',
+                justifyContent: 'center',
+                borderRadius: 50,
+                border: 'none',
+                marginHorizontal: 20,
+                height: 50,
                 backgroundColor: '#05296E',
                 overflow: 'hidden',
+                bottom: '20'
             }
         }}>
             <Tabs.Screen name="index" options={{

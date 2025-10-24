@@ -5,4 +5,17 @@ export type UserProviderProps = {
     login: (email: string, password: string) => void;
     register: (email: string, password: string, name: string) => void;
     logout: () => void;
-}
+};
+
+export type FamilyMemberType = {
+    documentId?: string;
+    id: string;
+    name: string;
+};
+
+export type FamilyMembersType = {
+    familyMembers: FamilyMemberType[];
+    familyMember: FamilyMemberType;
+    familyMemberName: string;
+    loading: boolean;
+};

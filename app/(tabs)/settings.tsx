@@ -35,7 +35,7 @@ export default Settings;
 const styles = StyleSheet.create({
     button: {
         width: '90%',
-        marginVertical: 15,
+        marginVertical: 25,
         backgroundColor: '#4371d6',
         padding: 20,
         borderRadius: 15,

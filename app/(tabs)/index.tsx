@@ -3,60 +3,93 @@ import {
     View,
     StyleSheet,
     TouchableOpacity,
-    Pressable
+    Pressable,
+    ListRenderItem
 } from "react-native";
 import React, {useState} from "react";
 import ModalWrapper from "@/app/modals/ModalWrapper";
-import FamilyMember from "@/components/FamilyMember";
+import ModalWithTextInput from "@/components/ModalWithTextInput";
 import {SafeAreaView, SafeAreaProvider} from "react-native-safe-area-context";
 import DeleteFamilyMember from "@/components/DeleteFamilyMember";
 import CustomTouchableHighlight from "@/components/Buttons/CustomTouchableHighlight";
 import CustomIconTouchableHighlight from "@/components/Buttons/CustomIconTouchableHighlight";
 import CustomText from "@/components/CustomText";
-
-type familyMemberProps = {
-    id: string;
-    name: string;
-}
+import {FamilyMemberType} from "@/types";
+import {useAppDispatch, useAppSelector} from "@/hooks";
+import {useFamilyMembers} from "@/hooks/useFamilyMembers";
+import {chooseFamilyMember, setFamilyMemberName} from "@/store/reducers/familyMembersSlice";
 
 type ItemProps = {
-    item: familyMemberProps;
+    item: FamilyMemberType;
     backgroundColor: string;
     textColor: string;
 };
 
 export const Index = () => {
     const [isShowAddFamilyMemberModal, setIsShowAddFamilyMemberModal] = useState<boolean>(false);
+    const [isShowEditFamilyMemberModal, setIsShowEditFamilyMemberModal] = useState<boolean>(false);
     const [isShowDeleteFamilyMemberModal, setIsShowDeleteFamilyMemberModal] = useState<boolean>(false);
-    const [deletingFamilyMember, setDeletingFamilyMember] = useState<familyMemberProps>({id: '', name: ''});
-    const [familyMembers, setFamilyMembers] = useState<familyMemberProps[]>([]);
-    const [newFamilyMember, setNewFamilyMember] = useState('');
     const [selectedId, setSelectedId] = useState<string>();
 
-    const generateRandomId = (length = 6) => {
-        return Math.random().toString(36).substring(2, length + 2);
-    }
+    const {createFamilyMember, updateFamilyMember, deleteFamilyMember} = useFamilyMembers();
 
-    const addFamilyMember = () => {
-        if (!newFamilyMember) return;
+    const dispatch = useAppDispatch();
+    const familyMembers = useAppSelector(state => {
+        return state.familyMembers.familyMembers;
+    });
+    const familyMember = useAppSelector(state => {
+        return state.familyMembers.familyMember;
+    });
+    const familyMemberName = useAppSelector(state => {
+        return state.familyMembers.familyMemberName;
+    });
 
-        setFamilyMembers([...familyMembers, {id: generateRandomId(10), name: newFamilyMember}]);
-        handleCloseModal();
+    const addFamilyMemberFunc = async () => {
+        if (!familyMemberName) return;
+
+        const memberName = familyMemberName;
+
+        handleCloseModal(setIsShowAddFamilyMemberModal);
+
+        const response = await createFamilyMember(memberName);
+        if (!response) return;
     };
 
-    const handleCloseModal = () => {
-        setIsShowAddFamilyMemberModal(false);
-        setNewFamilyMember('');
+    const getFamilyMemberFunc = (member: FamilyMemberType) => {
+        if (!member) return;
+        chooseFamilyMemberFunc(member, setIsShowEditFamilyMemberModal);
     };
 
-    const chooseFamilyMemberForDeleting = (item: familyMemberProps) => {
-        setDeletingFamilyMember(item);
-        setIsShowDeleteFamilyMemberModal(true);
+    const updateFamilyMemberFunc = async (member: FamilyMemberType) => {
+        if (!member) return;
+        handleCloseModal(setIsShowEditFamilyMemberModal);
+
+        const response = await updateFamilyMember(member);
+        if (!response) return;
     };
 
-    const deleteFamilyMember = (item: familyMemberProps) => {
-        setIsShowDeleteFamilyMemberModal(false);
-        setFamilyMembers(familyMembers.filter(member => member.id !== item.id));
+    const setFamilyMemberNameFunc = (name: string) => {
+        dispatch(setFamilyMemberName(name));
+    };
+
+    const handleCloseModal = (setIsShowModal: (condition: boolean) => void) => {
+        dispatch(setFamilyMemberName(''));
+        dispatch(chooseFamilyMember({id: '', name: ''}));
+        setIsShowModal(false);
+    };
+
+    const chooseFamilyMemberFunc = (item: FamilyMemberType, setIsShowModal: (condition: boolean) => void) => {
+        dispatch(chooseFamilyMember(item));
+        dispatch(setFamilyMemberName(item.name));
+        setIsShowModal(true);
+    };
+
+    const deleteFamilyMemberFC = async (item: FamilyMemberType) => {
+        if (!item.documentId) return;
+
+        const response = await deleteFamilyMember(item.documentId);
+        if (!response) return;
+        handleCloseModal(setIsShowDeleteFamilyMemberModal);
     };
 
 
@@ -68,13 +101,13 @@ export const Index = () => {
                 </CustomText>
             </TouchableOpacity>
             <CustomIconTouchableHighlight name='edit' className='flex-1 justify-center items-center'
-                                          pressFunction={() => setIsShowAddFamilyMemberModal(true)}/>
+                                          pressFunction={() => getFamilyMemberFunc(item)}/>
             <CustomIconTouchableHighlight name='delete' className='flex-1 justify-center items-center'
-                                          pressFunction={() => chooseFamilyMemberForDeleting(item)}/>
+                                          pressFunction={() => chooseFamilyMemberFunc(item, setIsShowDeleteFamilyMemberModal)}/>
         </View>
     );
 
-    const RenderItem = ({item}: familyMemberProps) => {
+    const RenderItem: ListRenderItem<FamilyMemberType> = ({item}) => {
         return (
             <Item
                 item={item}
@@ -84,44 +117,63 @@ export const Index = () => {
         )
     };
 
-    return <SafeAreaView className='flex-1 justify-center items-center'>
-        <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
-            <CustomText className='text-white'>Добавить члена семьи</CustomText>
-        </Pressable>
-        <SafeAreaProvider style={styles.provider}>
-            <SafeAreaView style={styles.container}>
-                <FlatList
-                    className='w-full'
-                    data={familyMembers}
-                    renderItem={RenderItem}
-                    keyExtractor={item => item.id}
-                    extraData={selectedId}
-                />
-            </SafeAreaView>
-        </SafeAreaProvider>
-        <ModalWrapper isOpen={isShowAddFamilyMemberModal}>
-            <View className='bg-white w-full p-4 rounded-xl'>
-                <FamilyMember newFamilyMember={newFamilyMember} setNewFamilyMember={setNewFamilyMember}/>
-                <View className='flex-row gap-x-2 w-full justify-end'>
-                    <CustomTouchableHighlight name='Добавить' className='bg-primary' disabled={!newFamilyMember}
-                                              pressFunction={addFamilyMember}/>
-                    <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn'
-                                              pressFunction={handleCloseModal}/>
+    return (
+        <SafeAreaView className='flex-1 justify-center items-center'>
+            <Pressable onPress={() => setIsShowAddFamilyMemberModal(true)} style={styles.addFamilyMemberButton}>
+                <CustomText className='text-white'>Добавить члена семьи</CustomText>
+            </Pressable>
+            <SafeAreaProvider style={styles.provider}>
+                <SafeAreaView style={styles.container}>
+                    <FlatList
+                        className='w-full'
+                        data={familyMembers}
+                        renderItem={RenderItem}
+                        keyExtractor={item => item.id}
+                        extraData={selectedId}
+                    />
+                </SafeAreaView>
+            </SafeAreaProvider>
+            <ModalWrapper isOpen={isShowAddFamilyMemberModal}>
+                <View className='bg-white w-full p-4 rounded-xl'>
+                    <ModalWithTextInput title='Введите имя члена семьи' text={familyMemberName}
+                                        setText={setFamilyMemberNameFunc}/>
+                    <View className='flex-row gap-x-2 w-full justify-end'>
+                        <CustomTouchableHighlight name='Добавить' className='bg-primary' disabled={!familyMemberName}
+                                                  pressFunction={addFamilyMemberFunc}/>
+                        <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn'
+                                                  pressFunction={() => handleCloseModal(setIsShowAddFamilyMemberModal)}/>
+                    </View>
                 </View>
-            </View>
-        </ModalWrapper>
-        <ModalWrapper isOpen={isShowDeleteFamilyMemberModal}>
-            <View className='bg-white w-full p-4 rounded-xl'>
-                <DeleteFamilyMember familyMemberName={deletingFamilyMember?.name ?? ''}/>
-                <View className='flex-row gap-x-2 w-full justify-end'>
-                    <CustomTouchableHighlight name='Удалить' className='bg-deleteBtn'
-                                              pressFunction={() => deleteFamilyMember(deletingFamilyMember)}/>
-                    <CustomTouchableHighlight name='Отменить' className='bg-closeBtn'
-                                              pressFunction={() => setIsShowDeleteFamilyMemberModal(false)}/>
+            </ModalWrapper>
+            <ModalWrapper isOpen={isShowEditFamilyMemberModal}>
+                <View className='bg-white w-full p-4 rounded-xl'>
+                    <ModalWithTextInput title='Введите имя члена семьи' text={familyMemberName}
+                                        setText={setFamilyMemberNameFunc}/>
+                    <View className='flex-row gap-x-2 w-full justify-end'>
+                        <CustomTouchableHighlight name='Сохранить' className='bg-primary' disabled={!familyMemberName}
+                                                  pressFunction={() => updateFamilyMemberFunc({
+                                                      ...familyMember,
+                                                      name: familyMemberName
+                                                  })}/>
+                        <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn'
+                                                  pressFunction={() => handleCloseModal(setIsShowEditFamilyMemberModal)}/>
+                    </View>
                 </View>
-            </View>
-        </ModalWrapper>
-    </SafeAreaView>
+
+            </ModalWrapper>
+            <ModalWrapper isOpen={isShowDeleteFamilyMemberModal}>
+                <View className='bg-white w-full p-4 rounded-xl'>
+                    <DeleteFamilyMember familyMemberName={familyMemberName ?? ''}/>
+                    <View className='flex-row gap-x-2 w-full justify-end'>
+                        <CustomTouchableHighlight name='Удалить' className='bg-deleteBtn'
+                                                  pressFunction={() => deleteFamilyMemberFC(familyMember)}/>
+                        <CustomTouchableHighlight name='Отменить' className='bg-closeBtn'
+                                                  pressFunction={() => handleCloseModal(setIsShowDeleteFamilyMemberModal)}/>
+                    </View>
+                </View>
+            </ModalWrapper>
+        </SafeAreaView>
+    )
 }
 
 export default Index;
@@ -134,20 +186,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 8,
         height: 40,
-        // position: 'absolute',
         paddingHorizontal: 20,
         paddingVertical: 5,
         marginTop: 10,
-        // bottom: 110,
-        // right: 10
     },
     provider: {
         width: '100%',
         columnGap: 10,
     },
     container: {
-        flex: 1,
-        marginBottom: 10
+        flex: 1
     },
     item: {
         backgroundColor: '#6B8FD4',

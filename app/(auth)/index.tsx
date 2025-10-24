@@ -1,6 +1,12 @@
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import React, {useState} from "react";
-import {Keyboard, StyleSheet, TouchableWithoutFeedback, useWindowDimensions, View} from "react-native";
+import {
+    Keyboard,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    useWindowDimensions,
+    View
+} from "react-native";
 import Login from "@/app/(auth)/login";
 import Register from "@/app/(auth)/register";
 import {SafeAreaView} from "react-native-safe-area-context";

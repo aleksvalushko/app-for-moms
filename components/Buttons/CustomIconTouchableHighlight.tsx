@@ -6,7 +6,7 @@ type PROPS = {
     name: string;
     color?: string;
     className: string;
-    pressFunction: () => void;
+    pressFunction: (prop: any) => void;
     disabled?: boolean;
 }
 

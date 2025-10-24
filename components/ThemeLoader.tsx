@@ -1,17 +1,28 @@
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, View, Modal, ViewStyle} from 'react-native'
 
-const ThemedLoader = () => {
-  // const colorScheme = useColorScheme()
-  // const theme = Colors[colorScheme] ?? Colors.light
+interface ThemedLoaderProps {
+  loading?: boolean
+}
+
+const ThemedLoader = ({ loading = false }: ThemedLoaderProps) => {
+  const containerStyle: ViewStyle = {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  };
 
   return (
-    <View style={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center"
-    }}>
-      <ActivityIndicator size="large" color='#4371d6' />
-    </View>
+    <Modal 
+      visible={loading} 
+      transparent 
+      animationType='fade' 
+      statusBarTranslucent
+    >
+      <View style={containerStyle}>
+        <ActivityIndicator size="large" color='#4371d6' />
+      </View>
+    </Modal>
   )
 }
 
