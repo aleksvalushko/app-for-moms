@@ -1,12 +1,10 @@
-import {
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-} from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, {useState} from 'react'
 import {useUser} from "@/hooks/useUser";
 import {SafeAreaView} from "react-native-safe-area-context";
+import CustomTextInput from "@/components/Inputs/CustomTextInput";
+import CustomText from "@/components/CustomText";
+import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity";
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -19,7 +17,6 @@ const Register = () => {
     const signUp = async (email: string, password: string, name: string) => {
         try {
             await register(email, password, name);
-            // if (user) router.replace('/(tabs)');
         } catch (error: any) {
             setError(error.message);
         }
@@ -27,18 +24,16 @@ const Register = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TextInput style={styles.textInput} placeholder="E-mail" placeholderTextColor="#9E9E9E"
-                       keyboardType='email-address'
-                       clearButtonMode="while-editing" value={email} onChangeText={setEmail}/>
-            <TextInput style={styles.textInput} placeholder="Пароль" placeholderTextColor="#9E9E9E"
-                       clearButtonMode="while-editing" value={password} onChangeText={setPassword} secureTextEntry/>
-            <TextInput style={styles.textInput} placeholder="Имя" placeholderTextColor="#9E9E9E"
-                       clearButtonMode="while-editing" value={name} onChangeText={setName}/>
-            <TouchableOpacity style={styles.button} onPress={() => signUp(email, password, name)}>
-                <Text style={styles.text}>Зарегистрироваться</Text>
-            </TouchableOpacity>
+            <CustomTextInput placeholder="E-mail" placeholderTextColor="#9E9E9E" keyboardType='email-address' style={styles.input}
+                             value={email} onChangeText={setEmail}/>
+            <CustomTextInput placeholder="Пароль" placeholderTextColor="#9E9E9E" value={password} style={styles.input}
+                             onChangeText={setPassword} secureTextEntry/>
+            <CustomTextInput placeholder="Имя" placeholderTextColor="#9E9E9E" style={styles.input} value={name} onChangeText={setName}/>
+            <CustomTouchableOpacity style={styles.button} pressFunction={() => signUp(email, password, name)}>
+                <CustomText style={styles.text}>Зарегистрироваться</CustomText>
+            </CustomTouchableOpacity>
 
-            {error && <Text style={styles.error}>{error}</Text>}
+            {error && <CustomText style={styles.error}>{error}</CustomText>}
         </SafeAreaView>
     )
 }
@@ -50,24 +45,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FAFAFA',
-    },
-    textInput: {
-        height: 50,
-        width: '90%',
-        backgroundColor: '#FFFFFF',
-        borderColor: '#E8EAF6',
-        borderWidth: 2,
-        borderRadius: 15,
-        marginVertical: 15,
-        paddingHorizontal: 25,
-        fontSize: 16,
-        color: '#3C4858',
-        shadowColor: '#9E9E9E',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 4,
     },
     button: {
         width: '90%',
@@ -87,6 +64,9 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 18,
         fontWeight: '600',
+    },
+    input: {
+        width: '90%'
     },
     error: {
         color: 'red',

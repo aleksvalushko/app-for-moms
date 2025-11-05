@@ -34,9 +34,9 @@ const AuthComponent = () => {
     const renderTabBar = (props: any) => (
         <TabBar
             {...props}
-            indicatorStyle={{backgroundColor: '#01153e'}}
+            indicatorStyle={{backgroundColor: '#4371d6'}}
             style={styles.tabBarView}
-            activeColor='#01153e'
+            activeColor='#4371d6'
             inactiveColor='lightgrey'
         />
     );
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#FAFAFA',
     },
     titleWrapper: {
         flex: 1,
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: '800',
         marginVertical: 20,
-        color: '#1A237E',
+        color: '#4371d6',
     },
     tabBarView: {
         height: 50,

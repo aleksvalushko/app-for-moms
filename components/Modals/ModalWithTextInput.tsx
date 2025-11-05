@@ -1,5 +1,7 @@
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from "react";
+import CustomTextInput from "@/components/Inputs/CustomTextInput";
+import CustomText from "@/components/CustomText";
 
 type PROPS = {
     title: string;
@@ -10,8 +12,8 @@ type PROPS = {
 const ModalWithTextInput: React.FC<PROPS> = ({title, text, setText}) => {
     return (
         <View>
-            <Text>{title}</Text>
-            <TextInput
+            <CustomText className='font-semibold text-[20px]'>{title}</CustomText>
+            <CustomTextInput
                 style={styles.input}
                 onChangeText={setText}
                 value={text}
@@ -25,11 +27,10 @@ const ModalWithTextInput: React.FC<PROPS> = ({title, text, setText}) => {
 
 const styles = StyleSheet.create({
     input: {
-        height: 40,
-        borderWidth: 1,
-        padding: 10,
-        marginTop: 10,
-        marginBottom: 10,
+        fontSize: 20,
+        width: '100%',
+        paddingRight: 40,
+        paddingLeft: 10
     },
 });
 

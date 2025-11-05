@@ -1,5 +1,5 @@
 import {StatusBar} from "expo-status-bar";
-import GuestOnly from "@/components/auth/GuestOnly";
+import GuestOnly from "@/components/Auth/GuestOnly";
 import AuthComponent from "@/app/(auth)/index";
 
 const AuthLayout = () =>  {

@@ -1,12 +1,10 @@
-import {
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-} from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, {useState} from 'react'
 import {useUser} from "@/hooks/useUser";
 import {SafeAreaView} from "react-native-safe-area-context";
+import CustomTextInput from "@/components/Inputs/CustomTextInput";
+import CustomText from "@/components/CustomText";
+import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -25,18 +23,17 @@ const Login = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <TextInput style={styles.textInput} placeholder="E-mail" placeholderTextColor="#9E9E9E"
-                       keyboardType='email-address'
-                       clearButtonMode="while-editing" value={email} onChangeText={setEmail}/>
-            <TextInput style={styles.textInput} placeholder="Пароль" placeholderTextColor="#9E9E9E"
-                       clearButtonMode="while-editing" value={password} onChangeText={setPassword} secureTextEntry/>
-            <TouchableOpacity style={styles.button} onPress={() => signIn(email, password)}>
-                <Text style={styles.text}>Войти</Text>
-            </TouchableOpacity>
+            <SafeAreaView style={styles.container}>
+                <CustomTextInput placeholder="E-mail" placeholderTextColor="#9E9E9E" keyboardType='email-address'
+                                 style={styles.input} value={email} onChangeText={setEmail}/>
+                <CustomTextInput placeholder="Пароль" placeholderTextColor="#9E9E9E" style={styles.input}
+                                 value={password} onChangeText={setPassword} secureTextEntry/>
+                <CustomTouchableOpacity style={styles.button} pressFunction={() => signIn(email, password)}>
+                        <CustomText style={styles.text}>Войти</CustomText>
+                </CustomTouchableOpacity>
 
-            {error && <Text style={styles.error}>{error}</Text>}
-        </SafeAreaView>
+                {error && <CustomText style={styles.error}>{error}</CustomText>}
+            </SafeAreaView>
     )
 }
 
@@ -47,24 +44,6 @@ const styles = StyleSheet.create({
         flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FAFAFA',
-    },
-    textInput: {
-        height: 50,
-        width: '90%',
-        backgroundColor: '#FFFFFF',
-        borderColor: '#E8EAF6',
-        borderWidth: 2,
-        borderRadius: 15,
-        marginVertical: 15,
-        paddingHorizontal: 25,
-        fontSize: 16,
-        color: '#3C4858',
-        shadowColor: '#9E9E9E',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 4,
     },
     button: {
         width: '90%',
@@ -84,6 +63,9 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 18,
         fontWeight: '600',
+    },
+    input: {
+        width: '90%'
     },
     error: {
         color: 'red',
