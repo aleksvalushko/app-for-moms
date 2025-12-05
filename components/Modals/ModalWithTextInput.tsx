@@ -11,8 +11,8 @@ type PROPS = {
 
 const ModalWithTextInput: React.FC<PROPS> = ({title, text, setText}) => {
     return (
-        <View>
-            <CustomText className='font-semibold text-[20px]'>{title}</CustomText>
+        <View className='bg-white dark:bg-darkModalBackground'>
+            <CustomText className='font-semibold text-[20px] text-black dark:text-white'>{title}</CustomText>
             <CustomTextInput
                 style={styles.input}
                 onChangeText={setText}

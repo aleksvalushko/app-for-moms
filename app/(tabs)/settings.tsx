@@ -1,12 +1,13 @@
-import {FlatList, StyleSheet, Text, useColorScheme} from "react-native";
+import {FlatList, StyleSheet, Text} from "react-native";
 import React, {useState} from "react";
 import {useUser} from "@/hooks/useUser";
 import {useRouter} from "expo-router";
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
-import CustomPressable from "@/components/Buttons/CustomPressable";
 import CustomText from "@/components/CustomText";
-import {setColorScheme} from "react-native/Libraries/Utilities/Appearance";
 import ModalWithConfirmation from "@/components/Modals/ModalWithConfirmation";
+import {useColorScheme} from "nativewind";
+import CustomTouchableHighlight from "@/components/Buttons/CustomTouchableHighlight";
+import {COLORS} from "@/constants/colors";
 
 type ItemType = {
     id: number;
@@ -17,7 +18,7 @@ type ItemType = {
 
 const Settings = () => {
     const router = useRouter();
-    const colorScheme = useColorScheme();
+    const {colorScheme, toggleColorScheme} = useColorScheme();
     const {logout} = useUser();
 
     const [error, setError] = useState(null);
@@ -37,36 +38,35 @@ const Settings = () => {
     };
 
     const changeAppColor = async () => {
-        if (colorScheme === 'dark') {
-            setColorScheme('light');
-        } else {
-            setColorScheme('dark');
-        }
+        toggleColorScheme();
         setIsShowChangeAppColorModal(false);
     };
 
     const settings: ItemType[] = [
         {
-            id: 1, title: 'Поменять цвет приложения', icon: 'circle', onPress: () => setIsShowChangeAppColorModal(true)
+            id: 1, title: 'Изменить цвет приложения', icon: 'theme-light-dark', onPress: () => setIsShowChangeAppColorModal(true)
         },
         {id: 2, title: 'Выйти', icon: 'logout', onPress: () => setIsShowLogoutModal(true)},
     ]
 
+    const SettingsItem = ({item}: { item: ItemType }) => (
+        <CustomTouchableHighlight pressFunction={item.onPress} name={item.title} style={styles.item} underlayColor={COLORS[colorScheme].colors.activeListElement}
+                                  className='h-[100px] flex-row items-center justify-start text-white text-[20px] bg-listElement' textStyle={styles.itemLabel}
+                                  iconName={item.icon} isLeftIcon={true}/>
+    );
+
     return (
-        <SafeAreaView className='flex-1 justify-center items-center p-5'>
-            <CustomText className='text-[30px] mb-10'>Настройки</CustomText>
+        <SafeAreaView className='flex-1 justify-center items-center p-[10px]'>
+            <CustomText className='text-[30px] mb-[10px] text-black dark:text-white'>Настройки</CustomText>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
                     <FlatList<ItemType>
-                        className='w-full'
                         data={settings}
-                        renderItem={({item}: { item: ItemType }) => <CustomPressable title={item.title}
-                                                                                     pressFunction={item.onPress}
-                                                                                     icon={item.icon}/>}
+                        renderItem={({item}: { item: ItemType }) => <SettingsItem item={item}/>}
                         keyExtractor={(item: ItemType) => item.id.toString()}
                     />
+                    {error && <Text style={styles.error}>{error}</Text>}
                 </SafeAreaView>
-                {error && <Text style={styles.error}>{error}</Text>}
             </SafeAreaProvider>
 
             <ModalWithConfirmation isOpen={isShowChangeAppColorModal}
@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     item: {
-        backgroundColor: '#6B8FD4',
         padding: 10,
         marginVertical: 8,
         borderRadius: 10,
@@ -105,25 +104,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        backgroundColor: '#5b86e5',
     },
-    button: {
-        width: '90%',
-        marginVertical: 25,
-        backgroundColor: '#4371d6',
-        padding: 20,
-        borderRadius: 15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#4371d6',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.4,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    text: {
-        color: '#FFFFFF',
-        fontSize: 18,
-        fontWeight: '600',
+    itemLabel: {
+        color: '#ffffff',
+        fontSize: 20
     },
     error: {
         color: 'red',

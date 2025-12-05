@@ -48,7 +48,7 @@ const AuthComponent = () => {
                     <CustomText style={styles.title}>Приложение для мам 👩‍🍼</CustomText>
                 </View>
                 <SafeAreaView style={{flex: 3}}>
-                    <TabView
+                    <TabView<RoutesProps>
                         navigationState={{index, routes}}
                         renderScene={renderScene}
                         renderTabBar={renderTabBar}

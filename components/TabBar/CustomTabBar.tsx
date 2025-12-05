@@ -14,7 +14,6 @@ type ItemLayout = { x: number; width: number };
 
 const CustomTabBar: React.FC<TabBarProps> = ({state, descriptors, navigation}) => {
     const {colors} = useTheme();
-    console.log(colors)
     const pillX = useSharedValue(0);
     const pillW = useSharedValue(0);
     const layoutsRef = useRef<Record<number, ItemLayout>>({});

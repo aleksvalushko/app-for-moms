@@ -17,7 +17,7 @@ const ModalWrapper: React.FC<PROPS> = ({isOpen, withInput, children}: PROPS) => 
             </KeyboardAvoidingView>
         ) :
         (
-            <View className='items-center justify-center w-full h-full px-5 bg-zinc-900/40'>
+            <View className='items-center justify-center w-full h-full px-5 bg-zinc-900/40 dark:bg-zinc-600/90'>
                 {children}
             </View>
         )

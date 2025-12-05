@@ -1,4 +1,4 @@
-import {StyleProp, Text, TextStyle, useColorScheme} from 'react-native';
+import {StyleProp, Text, TextStyle} from 'react-native';
 import React, {ReactNode} from "react";
 
 type PROPS = {
@@ -8,14 +8,7 @@ type PROPS = {
 }
 
 const CustomText: React.FC<PROPS> = ({children, className, style}) => {
-    const colorScheme = useColorScheme();
-    const isDarkMode = colorScheme === 'dark';
-
-    const textStyle = {
-        color: style && style['color'] ? style['color'] : isDarkMode ? '#FFF' : '#000',
-    };
-
-    return <Text className={className} style={[{...style}, textStyle]}>{children}</Text>;
+    return <Text className={className} style={{...style}}>{children}</Text>;
 }
 
 export default CustomText;

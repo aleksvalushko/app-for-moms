@@ -28,7 +28,7 @@ const Login = () => {
                                  style={styles.input} value={email} onChangeText={setEmail}/>
                 <CustomTextInput placeholder="Пароль" placeholderTextColor="#9E9E9E" style={styles.input}
                                  value={password} onChangeText={setPassword} secureTextEntry/>
-                <CustomTouchableOpacity style={styles.button} pressFunction={() => signIn(email, password)}>
+                <CustomTouchableOpacity className='bg-accent' style={styles.button} pressFunction={() => signIn(email, password)}>
                         <CustomText style={styles.text}>Войти</CustomText>
                 </CustomTouchableOpacity>
 
@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
     button: {
         width: '90%',
         marginVertical: 15,
-        backgroundColor: '#4371d6',
-        padding: 20,
+        padding: 10,
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',

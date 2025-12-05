@@ -29,7 +29,7 @@ const Register = () => {
             <CustomTextInput placeholder="Пароль" placeholderTextColor="#9E9E9E" value={password} style={styles.input}
                              onChangeText={setPassword} secureTextEntry/>
             <CustomTextInput placeholder="Имя" placeholderTextColor="#9E9E9E" style={styles.input} value={name} onChangeText={setName}/>
-            <CustomTouchableOpacity style={styles.button} pressFunction={() => signUp(email, password, name)}>
+            <CustomTouchableOpacity className='bg-accent' style={styles.button} pressFunction={() => signUp(email, password, name)}>
                 <CustomText style={styles.text}>Зарегистрироваться</CustomText>
             </CustomTouchableOpacity>
 
@@ -37,6 +37,7 @@ const Register = () => {
         </SafeAreaView>
     )
 }
+
 
 export default Register;
 
@@ -49,8 +50,7 @@ const styles = StyleSheet.create({
     button: {
         width: '90%',
         marginVertical: 15,
-        backgroundColor: '#4371d6',
-        padding: 20,
+        padding: 10,
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',
