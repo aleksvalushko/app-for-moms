@@ -1,18 +1,34 @@
-import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import React, {ReactNode} from "react";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 type PROPS = {
+    iconName?: string;
+    color?: string;
     className?: string;
-    pressFunction: () => void;
+    pressFunction: (props: any) => void;
     disabled?: boolean;
+    size?: number;
     style?: StyleProp<ViewStyle> | undefined;
-    children: ReactNode;
+    children?: ReactNode;
 }
 
-const CustomTouchableOpacity = ({className, pressFunction, disabled, style, children}: PROPS) => {
+const CustomTouchableOpacity = ({
+                                    iconName,
+                                    color = 'white',
+                                    className,
+                                    pressFunction,
+                                    disabled,
+                                    style,
+                                    size = 24,
+                                    children
+                                }: PROPS) => {
     return <TouchableOpacity onPress={pressFunction} disabled={disabled}
-                               className={className} style={[styles.button, {...style}]}>
-        {children}
+                             className={className} style={{...style}}>
+        <View style={styles.button}>
+            {iconName && <AntDesign name={iconName} size={size} color={color}/>}
+            {children}
+        </View>
     </TouchableOpacity>;
 }
 

@@ -1,45 +1,53 @@
-import {StyleProp, StyleSheet, TextStyle, TouchableHighlight, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TextStyle, TouchableHighlight, View, ViewStyle} from 'react-native';
 import React from "react";
 import CustomText from "@/components/CustomText";
-import {useAppColors} from "@/hooks/useAppColors";
+import {useAvailableIcons} from "@/hooks/useAvailableIcons";
 
 type Props = {
-    name: string;
+    name?: string;
+    iconName?: string;
+    color?: string;
     className?: string;
-    pressFunction: () => void;
-    variant?: ButtonVariant;
+    textClassName?: string;
+    underlayColor?: string;
+    pressFunction: (props: any) => void;
     disabled?: boolean;
-    buttonStyle?: StyleProp<ViewStyle>;
+    isLeftIcon?: boolean;
+    size?: number;
+    style?: StyleProp<ViewStyle> | undefined;
     textStyle?: StyleProp<TextStyle>;
 };
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'neutral' | 'outline';
-
 const CustomTouchableHighlight = ({
                                       name,
+                                      iconName,
+                                      color = 'white',
                                       className,
+                                      textClassName,
+                                      underlayColor = 'rgba(0, 0, 0, 0.1)',
                                       pressFunction,
-                                      variant = 'neutral',
                                       disabled,
-                                      buttonStyle,
+                                      isLeftIcon = false,
+                                      style,
+                                      size = 24,
                                       textStyle
                                   }: Props) => {
 
-    const {
-        mergedTextStyle,
-        mergedButtonStyle,
-        underlayColor
-    } = useAppColors(variant, disabled, styles, buttonStyle, textStyle);
+    const { Icon } = useAvailableIcons(iconName, size, color);
 
     return (
         <TouchableHighlight
             onPress={pressFunction}
             disabled={disabled}
             className={className}
-            style={mergedButtonStyle}
+            style={[styles.button, {...style}, disabled ? {opacity: 0.5} : {opacity: 1}]}
             underlayColor={underlayColor}
         >
-                <CustomText style={mergedTextStyle}>{name}</CustomText>
+            <View className='flex-row gap-x-[10px]'>
+                {isLeftIcon && <Icon />}
+                <CustomText className={textClassName} style={textStyle}>{name}</CustomText>
+                {!isLeftIcon && <Icon />}
+            </View>
         </TouchableHighlight>
     );
 }
@@ -47,17 +55,6 @@ const CustomTouchableHighlight = ({
 export default CustomTouchableHighlight;
 
 const styles = StyleSheet.create({
-    outlinedButton: {
-        borderRadius: 8,
-        height: 50,
-        padding: 10,
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: '#545457'
-    },
     button: {
         borderRadius: 8,
         height: 50,
@@ -67,7 +64,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    buttonText: {
-        fontSize: 20,
-    }
 });
