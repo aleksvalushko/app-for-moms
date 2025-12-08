@@ -17,17 +17,20 @@ import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity"
 import CustomPressable from "@/components/Buttons/CustomPressable";
 import {COLORS} from "@/constants/colors";
 import {useColorScheme} from "nativewind";
+import {useRouter} from "expo-router";
 
 export const Index = () => {
+    const {colorScheme} = useColorScheme();
+    const router = useRouter();
+
     const [isShowAddFamilyMemberModal, setIsShowAddFamilyMemberModal] = useState<boolean>(false);
     const [isShowEditFamilyMemberModal, setIsShowEditFamilyMemberModal] = useState<boolean>(false);
     const [isShowDeleteFamilyMemberModal, setIsShowDeleteFamilyMemberModal] = useState<boolean>(false);
     const [selectedId, setSelectedId] = useState<string>();
-    const {colorScheme} = useColorScheme();
 
     const {createFamilyMember, updateFamilyMember, deleteFamilyMember} = useFamilyMembers();
-
     const dispatch = useAppDispatch();
+
     const familyMembers = useAppSelector(state => {
         return state.familyMembers.familyMembers;
     });
@@ -86,20 +89,25 @@ export const Index = () => {
         handleCloseModal(setIsShowDeleteFamilyMemberModal);
     };
 
+    const goToFamilyMember = (id: string) => {
+        setSelectedId(id);
+        router.navigate({pathname: '/familyMember/[id]', params: {id}});
+    }
+
     const Item = ({item}: { item: FamilyMemberType }) => (
-        <View className='bg-listElement m-2 min-h-[50px]' style={styles.item}>
-            <CustomTouchableOpacity pressFunction={() => setSelectedId(item.id)} className='flex-1 justify-start'>
-                <CustomText style={styles.itemTitle}>{item.name}</CustomText>
-            </CustomTouchableOpacity>
-            <CustomPressable iconName='edit' className='row justify-center items-center'
+        <CustomTouchableOpacity pressFunction={() => goToFamilyMember(item.id)}
+                                className='flex-1 justify-start bg-listElement my-[5px] min-h-[50px]'
+                                style={styles.item}>
+            <CustomText className='flex-1 justify-start text-white text-[25px]'>{item.name}</CustomText>
+            <CustomPressable iconName='edit' className='justify-center items-center'
                              pressFunction={() => getFamilyMemberFunc(item)}/>
-            <CustomPressable iconName='delete' className='row justify-center items-center'
+            <CustomPressable iconName='delete' className='justify-center items-center'
                              pressFunction={() => chooseFamilyMemberFunc(item, setIsShowDeleteFamilyMemberModal)}/>
-        </View>
+        </CustomTouchableOpacity>
     );
 
     return (
-        <SafeAreaView className='flex-1 justify-center items-center py-[10px]'>
+        <SafeAreaView className='flex-1 justify-center items-center pt-[10px]'>
             <CustomText className='text-[30px] mb-[10px] text-black dark:text-white'>Члены семьи</CustomText>
             <CustomPressable title='Добавить члена семьи' className='bg-primary' textClassName='text-white text-[20px]'
                              pressFunction={() => setIsShowAddFamilyMemberModal(true)}
@@ -120,13 +128,14 @@ export const Index = () => {
                     <ModalWithTextInput title='Введите имя члена семьи' text={familyMemberName}
                                         setText={setFamilyMemberNameFunc}/>
                     <View className='flex-row gap-x-2 w-full justify-between'>
-                        <CustomTouchableHighlight name='Добавить' className='bg-primary items-center justify-center' disabled={!familyMemberName}
+                        <CustomTouchableHighlight name='Добавить' className='bg-primary items-center justify-center'
+                                                  disabled={!familyMemberName}
                                                   textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activePrimary}
+                                                  underlayColor={COLORS[colorScheme].colors.underlayForPrimary}
                                                   pressFunction={addFamilyMemberFunc}/>
                         <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn items-center justify-center'
                                                   textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activeSecondary}
+                                                  underlayColor={COLORS[colorScheme].colors.underlaySecondary}
                                                   pressFunction={() => handleCloseModal(setIsShowAddFamilyMemberModal)}/>
                     </View>
                 </View>
@@ -138,14 +147,14 @@ export const Index = () => {
                     <View className='flex-row gap-x-2 w-full justify-end'>
                         <CustomTouchableHighlight name='Сохранить' className='bg-primary items-center justify-center'
                                                   textClassName='text-white text-[20px]' disabled={!familyMemberName}
-                                                  underlayColor={COLORS[colorScheme].colors.activePrimary}
+                                                  underlayColor={COLORS[colorScheme].colors.underlayForPrimary}
                                                   pressFunction={() => updateFamilyMemberFunc({
                                                       ...familyMember,
                                                       name: familyMemberName
                                                   })}/>
                         <CustomTouchableHighlight name='Закрыть' className='bg-closeBtn items-center justify-center'
                                                   textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activeSecondary}
+                                                  underlayColor={COLORS[colorScheme].colors.underlaySecondary}
                                                   pressFunction={() => handleCloseModal(setIsShowEditFamilyMemberModal)}/>
                     </View>
                 </View>
@@ -159,11 +168,11 @@ export const Index = () => {
                     <View className='flex-row gap-x-2 w-full justify-end'>
                         <CustomTouchableHighlight name='Удалить' className='bg-deleteBtn items-center justify-center'
                                                   textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activeDeleteBtn}
+                                                  underlayColor={COLORS[colorScheme].colors.underlayForDeleteBtn}
                                                   pressFunction={() => deleteFamilyMemberFC(familyMember)}/>
                         <CustomTouchableHighlight name='Отменить' className='bg-closeBtn items-center justify-center'
                                                   textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activeSecondary}
+                                                  underlayColor={COLORS[colorScheme].colors.underlaySecondary}
                                                   pressFunction={() => handleCloseModal(setIsShowDeleteFamilyMemberModal)}/>
                     </View>
                 </View>
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 8,
+        borderRadius: 10,
         height: 40,
         fontSize: 14,
         paddingHorizontal: 20,
@@ -192,9 +201,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     item: {
-        padding: 10,
         borderRadius: 10,
+        marginHorizontal: 10,
         flex: 1,
+        padding: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

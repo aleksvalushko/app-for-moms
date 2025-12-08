@@ -19,6 +19,7 @@ export default function RootLayout() {
                     <Stack>
                         <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                         <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                        <Stack.Screen name="familyMember/[id]" options={{headerShown: false}}/>
                     </Stack>
                 </ThemeProvider>
             </UserProvider>
