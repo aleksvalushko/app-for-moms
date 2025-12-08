@@ -8,6 +8,7 @@ export const TAB_ICONS = {
 export const ANTD_ICONS = [
     "edit",
     "delete",
+    "arrow-left",
 ];
 
 export const MATERIAL_ICONS = [
