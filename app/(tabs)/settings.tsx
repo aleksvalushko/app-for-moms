@@ -47,11 +47,12 @@ const Settings = () => {
             id: 1, title: 'Изменить цвет приложения', icon: 'theme-light-dark', onPress: () => setIsShowChangeAppColorModal(true)
         },
         {id: 2, title: 'Выйти', icon: 'logout', onPress: () => setIsShowLogoutModal(true)},
-    ]
+    ];
 
     const SettingsItem = ({item}: { item: ItemType }) => (
-        <CustomTouchableHighlight pressFunction={item.onPress} name={item.title} style={styles.item} underlayColor={COLORS[colorScheme].colors.activeListElement}
-                                  className='h-[100px] flex-row items-center justify-start text-white text-[20px] bg-listElement' textStyle={styles.itemLabel}
+        <CustomTouchableHighlight pressFunction={item.onPress} name={item.title} style={styles.item} underlayColor={COLORS[colorScheme].colors.underlayForListElement}
+                                  className='min-h-[50px] flex-row items-center justify-start bg-listElement my-[5px] max-w-full'
+                                  textClassName='text-white text-[20px]'
                                   iconName={item.icon} isLeftIcon={true}/>
     );
 
@@ -70,7 +71,7 @@ const Settings = () => {
             </SafeAreaProvider>
 
             <ModalWithConfirmation isOpen={isShowChangeAppColorModal}
-                                   text='Вы действительно хотите изменить цвет приложения?'
+                                   text='Вы действительно хотите изменить тему приложения?'
                                    confirm={changeAppColor}
                                    cancel={() => setIsShowChangeAppColorModal(false)}/>
 
@@ -92,23 +93,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start'
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
     },
     item: {
-        padding: 10,
-        marginVertical: 8,
-        borderRadius: 10,
         flex: 1,
         marginHorizontal: 10,
+        padding: 10,
+        borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#5b86e5',
-    },
-    itemLabel: {
-        color: '#ffffff',
-        fontSize: 20
     },
     error: {
         color: 'red',

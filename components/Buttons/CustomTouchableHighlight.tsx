@@ -43,7 +43,7 @@ const CustomTouchableHighlight = ({
             style={[styles.button, {...style}, disabled ? {opacity: 0.5} : {opacity: 1}]}
             underlayColor={underlayColor}
         >
-            <View className='flex-row gap-x-[10px]'>
+            <View className='flex-row gap-x-[10px] max-w-full items-center'>
                 {isLeftIcon && <Icon />}
                 <CustomText className={textClassName} style={textStyle}>{name}</CustomText>
                 {!isLeftIcon && <Icon />}

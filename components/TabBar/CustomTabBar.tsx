@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
+        position: 'absolute',
+        bottom: 15
     },
     bar: {
         height: 60,
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         columnGap: 10,
-        backgroundColor: 'rgba(67,113,214,0.4)',
+        backgroundColor: 'rgba(67, 113, 214, 0.9)',
         borderRadius: 30,
         padding: 4,
         width: 218

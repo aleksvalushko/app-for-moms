@@ -24,10 +24,10 @@ const ModalWithConfirmation: React.FC<Props> = ({isOpen, text, confirm, cancel}:
                     <View className='flex-row gap-x-2 w-full justify-between'>
                         <CustomTouchableHighlight name='Подтвердить' className="bg-primary items-center justify-center" pressFunction={confirm}
                         textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activePrimary}/>
+                                                  underlayColor={COLORS[colorScheme].colors.underlayForPrimary}/>
                         <CustomTouchableHighlight name='Отменить' className="bg-closeBtn items-center justify-center" pressFunction={cancel}
                         textClassName='text-white text-[20px]'
-                                                  underlayColor={COLORS[colorScheme].colors.activeSecondary}/>
+                                                  underlayColor={COLORS[colorScheme].colors.underlaySecondary}/>
                     </View>
                 </View>
             </View>
