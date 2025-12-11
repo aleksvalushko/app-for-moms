@@ -26,7 +26,6 @@ export const Index = () => {
     const [isShowAddFamilyMemberModal, setIsShowAddFamilyMemberModal] = useState<boolean>(false);
     const [isShowEditFamilyMemberModal, setIsShowEditFamilyMemberModal] = useState<boolean>(false);
     const [isShowDeleteFamilyMemberModal, setIsShowDeleteFamilyMemberModal] = useState<boolean>(false);
-    const [selectedId, setSelectedId] = useState<string>();
 
     const {createFamilyMember, updateFamilyMember, deleteFamilyMember} = useFamilyMembers();
     const dispatch = useAppDispatch();
@@ -89,13 +88,13 @@ export const Index = () => {
         handleCloseModal(setIsShowDeleteFamilyMemberModal);
     };
 
-    const goToFamilyMember = (id: string) => {
-        setSelectedId(id);
-        router.navigate({pathname: '/familyMember/[id]', params: {id}});
+    const goToFamilyMember = (item: FamilyMemberType) => {
+        dispatch(chooseFamilyMember(item));
+        router.navigate('/familyMember/[id]');
     }
 
     const Item = ({item}: { item: FamilyMemberType }) => (
-        <CustomTouchableOpacity pressFunction={() => goToFamilyMember(item.id)}
+        <CustomTouchableOpacity pressFunction={() => goToFamilyMember(item)}
                                 className='flex-1 justify-start bg-listElement my-[5px] min-h-[50px]'
                                 style={styles.item}>
             <CustomText className='flex-1 justify-start text-white text-[25px]'>{item.name}</CustomText>
@@ -109,9 +108,6 @@ export const Index = () => {
     return (
         <SafeAreaView className='flex-1 justify-center items-center pt-[10px]'>
             <CustomText className='text-[30px] mb-[10px] text-black dark:text-white'>Члены семьи</CustomText>
-            <CustomPressable title='Добавить члена семьи' className='bg-primary' textClassName='text-white text-[20px]'
-                             pressFunction={() => setIsShowAddFamilyMemberModal(true)}
-                             style={styles.addFamilyMemberButton}/>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
                     <FlatList<FamilyMemberType>
@@ -119,7 +115,6 @@ export const Index = () => {
                         data={familyMembers}
                         renderItem={({item}: { item: FamilyMemberType }) => <Item item={item}/>}
                         keyExtractor={(item: FamilyMemberType) => item.id}
-                        extraData={selectedId}
                     />
                 </SafeAreaView>
             </SafeAreaProvider>
@@ -177,6 +172,9 @@ export const Index = () => {
                     </View>
                 </View>
             </ModalWrapper>
+            <CustomPressable title='Добавить члена семьи' className='bg-primary absolute bottom-[60px] left-[0]' textClassName='text-white text-[20px]'
+                             pressFunction={() => setIsShowAddFamilyMemberModal(true)} rounded={true} iconName='add'
+                             style={styles.addFamilyMemberButton}/>
         </SafeAreaView>
     )
 }
@@ -191,8 +189,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         height: 40,
         fontSize: 14,
-        paddingHorizontal: 20,
-        marginVertical: 5
+        marginVertical: 5,
+        position: 'absolute',
+        right: 70,
+        bottom: 50
     },
     provider: {
         width: '100%',
