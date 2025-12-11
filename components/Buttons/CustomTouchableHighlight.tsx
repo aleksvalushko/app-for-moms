@@ -28,12 +28,12 @@ const CustomTouchableHighlight = ({
                                       pressFunction,
                                       disabled,
                                       isLeftIcon = false,
-                                      style,
+                                      style={},
                                       size = 24,
                                       textStyle
                                   }: Props) => {
 
-    const { Icon } = useAvailableIcons(iconName, size, color);
+    const {Icon} = useAvailableIcons(iconName, size, color);
 
     return (
         <TouchableHighlight
@@ -43,10 +43,10 @@ const CustomTouchableHighlight = ({
             style={[styles.button, {...style}, disabled ? {opacity: 0.5} : {opacity: 1}]}
             underlayColor={underlayColor}
         >
-            <View className='flex-row gap-x-[10px] max-w-full items-center'>
-                {isLeftIcon && <Icon />}
+            <View className='flex-row gap-x-[5px] max-w-full items-center' >
+                {isLeftIcon && <Icon/>}
                 <CustomText className={textClassName} style={textStyle}>{name}</CustomText>
-                {!isLeftIcon && <Icon />}
+                {!isLeftIcon && <Icon/>}
             </View>
         </TouchableHighlight>
     );

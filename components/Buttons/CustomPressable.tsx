@@ -15,9 +15,21 @@ type PROPS = {
     size?: number;
     style?: StyleProp<TextStyle> | StyleProp<ViewStyle> | undefined;
     isLeftIcon?: boolean;
+    rounded?: boolean;
 }
 
-const CustomPressable = ({title, className, textClassName, pressFunction, style, iconName, size = 24, iconColor = 'white', isLeftIcon}: PROPS) => {
+const CustomPressable = ({
+                             title,
+                             className,
+                             textClassName,
+                             pressFunction,
+                             style,
+                             iconName,
+                             size = 24,
+                             iconColor = 'white',
+                             isLeftIcon,
+                             rounded
+                         }: PROPS) => {
     const scale = useSharedValue(1);
 
     const animatedContainer = useAnimatedStyle(() => ({
@@ -25,25 +37,27 @@ const CustomPressable = ({title, className, textClassName, pressFunction, style,
     }));
 
     const handlePressIn = () => {
-        scale.value = withSpring(iconName ? 2 : 1.2, {stiffness: 320, damping: 250});
+        scale.value = withSpring(iconName ? 1.35 : 1.2, {stiffness: 320, damping: 250});
     };
 
     const handlePressOut = (e: any) => {
         scale.value = withSpring(1, {stiffness: 320, damping: 250});
         pressFunction(e);
+        if (!rounded) return;
     };
 
-    const { Icon } = useAvailableIcons(iconName, size, iconColor);
+    const {Icon} = useAvailableIcons(iconName, size, iconColor);
 
     return (
-        <Animated.View style={[styles.button, animatedContainer, {...style}]}>
-            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} className={className}  style={[{...style}, styles.button]}>
-                {isLeftIcon && <Icon />}
-                {title && <CustomText className={textClassName}>{title}</CustomText>}
-                {!isLeftIcon && <Icon />}
+        <Animated.View style={[animatedContainer, {...style}]}>
+            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} className={className}
+                       style={[{...style}, styles.button, rounded && styles.roundedButton]}>
+                {isLeftIcon && <Icon/>}
+                {title && !rounded && <CustomText className={textClassName}>{title}</CustomText>}
+                {!isLeftIcon && <Icon/>}
             </Pressable>
         </Animated.View>
-    )
+)
 }
 
 export default CustomPressable;
@@ -57,5 +71,14 @@ const styles = StyleSheet.create({
         columnGap: 10,
         alignItems: 'center',
         justifyContent: 'flex-start',
+    },
+    roundedButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 });

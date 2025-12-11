@@ -7,8 +7,8 @@ type PROPS = {
     style?: StyleProp<TextStyle> | undefined;
 }
 
-const CustomText: React.FC<PROPS> = ({children, className, style}) => {
-    return <Text className={className} style={{...style}}>{children}</Text>;
+const CustomText: React.FC<PROPS> = ({children, className = '', style = {}}) => {
+    return <Text className={className} style={style}>{children}</Text>;
 }
 
 export default CustomText;
