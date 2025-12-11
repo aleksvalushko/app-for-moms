@@ -22,7 +22,8 @@ export const COLORS = {
             underlayForDeleteBtn: '#c11a12',
             listElement: '#5b86e5',
             underlayForListElement: '#4371d666',
-            darkModalBackground: '#302f2f'
+            darkModalBackground: '#302f2f',
+            darkAgendaItemBackground: '#232323',
         },
     },
     light: {
@@ -46,7 +47,7 @@ export const COLORS = {
             underlayForDeleteBtn: '#c11a12',
             listElement: '#5b86e5',
             underlayForListElement: '#4371d666',
-            darkModalBackground: '#302f2f'
+            agendaItemBackground: '#f2f2f2',
         },
     }
 };

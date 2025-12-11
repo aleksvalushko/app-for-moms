@@ -1,5 +1,5 @@
 module.exports = {
-    content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
+    content: ["./app/**/*.{js,jsx,ts,tsx}"],
     presets: [require("nativewind/preset")],
     theme: {
         extend: {
@@ -21,7 +21,9 @@ module.exports = {
                 underlayForDeleteBtn: '#c11a12',
                 listElement: '#5b86e5',
                 underlayForListElement: '#4371d666',
-                darkModalBackground: '#302f2f'
+                darkModalBackground: '#302f2f',
+                darkAgendaItemBackground: '#232323',
+                agendaItemBackground: '#f2f2f2',
             }
         },
     },
