@@ -1,6 +1,5 @@
-import {Pressable, StyleProp, StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import {Pressable, StyleProp, StyleSheet, TextStyle, ViewStyle, Text} from 'react-native';
 import React from "react";
-import CustomText from "@/components/CustomText";
 import Animated, {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import {useAvailableIcons} from "@/hooks/useAvailableIcons";
 
@@ -53,7 +52,7 @@ const CustomPressable = ({
             <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} className={className}
                        style={[{...style}, styles.button, rounded && styles.roundedButton]}>
                 {isLeftIcon && <Icon/>}
-                {title && !rounded && <CustomText className={textClassName}>{title}</CustomText>}
+                {title && !rounded && <Text className={textClassName}>{title}</Text>}
                 {!isLeftIcon && <Icon/>}
             </Pressable>
         </Animated.View>

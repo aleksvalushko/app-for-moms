@@ -1,12 +1,11 @@
-import {StyleProp, StyleSheet, TextStyle, TouchableHighlight, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewStyle} from 'react-native';
 import React from "react";
-import CustomText from "@/components/CustomText";
 import {useAvailableIcons} from "@/hooks/useAvailableIcons";
 
 type Props = {
     name?: string;
     iconName?: string;
-    color?: string;
+    iconColor?: string;
     className?: string;
     textClassName?: string;
     underlayColor?: string;
@@ -21,7 +20,7 @@ type Props = {
 const CustomTouchableHighlight = ({
                                       name,
                                       iconName,
-                                      color = 'white',
+                                      iconColor = 'white',
                                       className,
                                       textClassName,
                                       underlayColor = 'rgba(0, 0, 0, 0.1)',
@@ -33,7 +32,7 @@ const CustomTouchableHighlight = ({
                                       textStyle
                                   }: Props) => {
 
-    const {Icon} = useAvailableIcons(iconName, size, color);
+    const {Icon} = useAvailableIcons(iconName, size, iconColor);
 
     return (
         <TouchableHighlight
@@ -43,9 +42,9 @@ const CustomTouchableHighlight = ({
             style={[styles.button, {...style}, disabled ? {opacity: 0.5} : {opacity: 1}]}
             underlayColor={underlayColor}
         >
-            <View className='flex-row gap-x-[5px] max-w-full items-center' >
+            <View className='flex-row gap-x-[5px] max-w-full items-center'>
                 {isLeftIcon && <Icon/>}
-                <CustomText className={textClassName} style={textStyle}>{name}</CustomText>
+                <Text className={textClassName} style={{...textStyle}}>{name}</Text>
                 {!isLeftIcon && <Icon/>}
             </View>
         </TouchableHighlight>

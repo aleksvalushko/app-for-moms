@@ -1,17 +1,17 @@
 import React, {useRef, useCallback, useState} from 'react';
-import {Animated, Easing, StyleSheet, View} from 'react-native';
+import {Animated, Easing, StyleSheet, View, Text} from 'react-native';
 import {ExpandableCalendar, AgendaList, CalendarProvider, WeekCalendar, LocaleConfig} from 'react-native-calendars';
-import {agendaItems, getMarkedDates} from '@/mocks/agendaItems';
-import AgendaItem from '@/mocks/AgendaItem';
+import {agendaItems, getMarkedDates} from '@/constants/agendaItems';
+import AgendaItem from '@/components/AgendaItem';
 import {getTheme, darkThemeColor} from '@/mocks/theme';
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
-import CustomText from "@/components/CustomText";
 import {useAppSelector} from "@/hooks";
 import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity";
 import {COLORS} from "@/constants/colors";
 import {useColorScheme} from "nativewind";
 import {useUser} from "@/hooks/useUser";
 import GoBackButton from "@/components/Buttons/GoBackButton";
+import CustomPressable from "@/components/Buttons/CustomPressable";
 
 LocaleConfig.locales['ru'] = {
     monthNames: [
@@ -53,6 +53,7 @@ const ExpandableCalendarScreen = (props: PROPS) => {
     });
     const {colorScheme} = useColorScheme();
     const {user} = useUser();
+    const [isShowEventModal, setIsShowEventModal] = useState<boolean>(false);
     const isDarkMode = colorScheme === 'dark';
 
     const familyMember = useAppSelector(state => {
@@ -84,7 +85,7 @@ const ExpandableCalendarScreen = (props: PROPS) => {
             });
             return (
                 <CustomTouchableOpacity style={styles.header} pressFunction={toggleCalendarExpansion}>
-                    <CustomText style={styles.headerTitle} className='text-black dark:text-white'>{date?.toString('MMMM yyyy')}</CustomText>
+                    <Text style={styles.headerTitle} className='text-black dark:text-white'>{date?.toString('MMMM yyyy')}</Text>
                     <Animated.Image source={CHEVRON} style={{transform: [{rotate: '90deg'}, {rotate: rotationInDegrees}], color: 'white'}}/>
                 </CustomTouchableOpacity>
             );
@@ -103,7 +104,10 @@ const ExpandableCalendarScreen = (props: PROPS) => {
         <SafeAreaView className='flex-1 justify-center items-center p-[10px]'>
             <View className='w-full flex-row justify-center items-center relative my-[10px]'>
                 <GoBackButton user={user} />
-                <CustomText className='text-[30px] text-black dark:text-white'>{familyMember?.name ?? ''}</CustomText>
+                <Text className='text-[30px] text-black dark:text-white'>{familyMember?.name ?? ''}</Text>
+                <CustomPressable className='bg-transparent' textClassName='text-white text-[20px]'
+                                 pressFunction={() => setIsShowEventModal(true)} rounded={true} iconName='add'
+                                 style={styles.addEventButton}/>
             </View>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
@@ -129,7 +133,9 @@ const ExpandableCalendarScreen = (props: PROPS) => {
                         <AgendaList
                             sections={ITEMS}
                             renderItem={renderItem}
-                            sectionStyle={{backgroundColor: isDarkMode ? COLORS[colorScheme].colors.darkAgendaItemBackground : COLORS[colorScheme].colors.agendaItemBackground, paddingHorizontal: 20, paddingVertical: 10}}
+                            sectionStyle={{
+                                backgroundColor: isDarkMode ? COLORS[colorScheme].colors?.darkAgendaItemBackground : COLORS[colorScheme].colors?.agendaItemBackground,
+                                padding: 10}}
                         />
                     </CalendarProvider>
                 </SafeAreaView>
@@ -162,5 +168,17 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
+    },
+    addEventButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        height: 40,
+        fontSize: 14,
+        marginVertical: 5,
+        position: 'absolute',
+        right: 0,
+        top: -7
     },
 });

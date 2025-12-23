@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import {useUser} from "@/hooks/useUser";
 import {useRouter} from "expo-router";
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
-import CustomText from "@/components/CustomText";
 import ModalWithConfirmation from "@/components/Modals/ModalWithConfirmation";
 import {useColorScheme} from "nativewind";
 import CustomTouchableHighlight from "@/components/Buttons/CustomTouchableHighlight";
@@ -58,7 +57,7 @@ const Settings = () => {
 
     return (
         <SafeAreaView className='flex-1 justify-center items-center p-[10px]'>
-            <CustomText className='text-[30px] mb-[10px] text-black dark:text-white'>Настройки</CustomText>
+            <Text className='text-[30px] mb-[10px] text-black dark:text-white'>Настройки</Text>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
                     <FlatList<ItemType>
@@ -97,13 +96,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     item: {
+        minHeight: 50,
+        maxWidth: '100%',
         flex: 1,
         marginHorizontal: 10,
-        padding: 10,
-        borderRadius: 10,
+        marginVertical: 5,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        backgroundColor: COLORS['dark'].colors.listElement
     },
     error: {
         color: 'red',

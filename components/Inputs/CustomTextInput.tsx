@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
     },
     clearButton: {
         position: 'absolute',
-        right: 0
+        right: 5
     },
 });

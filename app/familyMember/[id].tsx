@@ -1,12 +1,11 @@
 import {router} from 'expo-router'
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
-import CustomText from "@/components/CustomText";
 import {COLORS} from "@/constants/colors";
 import CustomTouchableHighlight from "@/components/Buttons/CustomTouchableHighlight";
 import React from "react";
 import {useColorScheme} from "nativewind";
 import {useUser} from "@/hooks/useUser";
-import {FlatList, StyleSheet, View} from "react-native";
+import {FlatList, StyleSheet, View, Text} from "react-native";
 import {useAppSelector} from "@/hooks";
 import GoBackButton from "@/components/Buttons/GoBackButton";
 
@@ -45,10 +44,10 @@ export default function FamilyMember() {
     );
 
     return (
-        <SafeAreaView className='flex-1 justify-center items-center p-[10px]'>
+        <SafeAreaView className='flex-1 justify-center items-center'>
             <View className='w-full flex-row justify-center items-center relative my-[10px]'>
                 <GoBackButton user={user} />
-                <CustomText className='text-[30px] text-black dark:text-white'>{familyMember?.name ?? ''}</CustomText>
+                <Text className='text-[30px] text-black dark:text-white'>{familyMember?.name ?? ''}</Text>
             </View>
             <SafeAreaProvider style={styles.provider}>
                 <SafeAreaView style={styles.container}>
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
+        padding: 10
     },
     item: {
         flex: 1,

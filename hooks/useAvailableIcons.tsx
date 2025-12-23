@@ -4,18 +4,18 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import React from "react";
 
-export const useAvailableIcons = (iconName, size, color) => {
-    const iconExists = (iconName, availableIcons) => availableIcons.includes(iconName);
+export const useAvailableIcons = (name, size, color) => {
+    const iconExists = (name, availableIcons) => availableIcons.includes(name);
 
     const Icon = () => {
-        if (iconName && iconExists(iconName, ANTD_ICONS)) {
-            return <AntDesign name={iconName} size={size} color={color} />;
+        if (name && iconExists(name, ANTD_ICONS)) {
+            return <AntDesign name={name} size={size} color={color} />;
         }
-        if (iconName && iconExists(iconName, MATERIAL_ICONS)) {
-            return <MaterialIcons name={iconName} size={size} color={color}/>;
+        if (name && iconExists(name, MATERIAL_ICONS)) {
+            return <MaterialIcons name={name} size={size} color={color}/>;
         }
-        if (iconName && iconExists(iconName, MATERIAL_COMMUNITY_ICONS)) {
-            return <MaterialCommunityIcons name={iconName} size={size} color={color}/>;
+        if (name && iconExists(name, MATERIAL_COMMUNITY_ICONS)) {
+            return <MaterialCommunityIcons name={name} size={size} color={color}/>;
         }
         return '';
     };

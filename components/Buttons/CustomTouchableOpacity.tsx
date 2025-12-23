@@ -24,7 +24,7 @@ const CustomTouchableOpacity = ({
                                     children
                                 }: PROPS) => {
     return <TouchableOpacity onPress={pressFunction} disabled={disabled}
-                             className={className} style={[styles.button, style]}>
+                             className={className} style={[styles.button, {...style}]}>
         {iconName && <AntDesign name={iconName} size={size} color={color}/>}
         {children}
     </TouchableOpacity>;
@@ -35,7 +35,6 @@ export default CustomTouchableOpacity;
 const styles = StyleSheet.create({
     button: {
         borderRadius: 5,
-        // padding: 10,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

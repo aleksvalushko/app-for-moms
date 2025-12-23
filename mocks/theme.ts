@@ -12,6 +12,7 @@ export function getTheme() {
     return {
         expandableKnobColor: darkThemeColor,
         disabledDotColor: disabledColor,
+        textDayStyle: {marginTop: 1},
         dotStyle: {marginTop: -2},
         backgroundColor: isDarkMode ? COLORS[colorScheme].colors.background : COLORS[colorScheme].colors.background,
         calendarBackground: isDarkMode ? COLORS[colorScheme].colors.background : COLORS[colorScheme].colors.background,
