@@ -12,6 +12,8 @@ import {useColorScheme} from "nativewind";
 import {useUser} from "@/hooks/useUser";
 import GoBackButton from "@/components/Buttons/GoBackButton";
 import CustomPressable from "@/components/Buttons/CustomPressable";
+import ModalWrapper from "@/components/Modals/ModalWrapper";
+import dayjs from 'dayjs';
 
 LocaleConfig.locales['ru'] = {
     monthNames: [
@@ -41,11 +43,11 @@ type PROPS = {
     weekView?: boolean;
 }
 
-const CHEVRON = require('@/img/next.png');
+// const CHEVRON = require('@/img/next.png');
 
 const ExpandableCalendarScreen = (props: PROPS) => {
     const {weekView} = props;
-    const [currentDay, setCurrentDay] = useState<string>('');
+    const [currentDay, setCurrentDay] = useState<string>(dayjs().format('YYYY-MM-DD'));
     const marked = useRef(getMarkedDates());
     const theme = useRef(getTheme());
     const todayBtnTheme = useRef({
@@ -86,7 +88,7 @@ const ExpandableCalendarScreen = (props: PROPS) => {
             return (
                 <CustomTouchableOpacity style={styles.header} pressFunction={toggleCalendarExpansion}>
                     <Text style={styles.headerTitle} className='text-black dark:text-white'>{date?.toString('MMMM yyyy')}</Text>
-                    <Animated.Image source={CHEVRON} style={{transform: [{rotate: '90deg'}, {rotate: rotationInDegrees}], color: 'white'}}/>
+                    {/*<Animated.Image source={CHEVRON} style={{transform: [{rotate: '90deg'}, {rotate: rotationInDegrees}], color: 'white'}}/>*/}
                 </CustomTouchableOpacity>
             );
         },
@@ -140,6 +142,25 @@ const ExpandableCalendarScreen = (props: PROPS) => {
                     </CalendarProvider>
                 </SafeAreaView>
             </SafeAreaProvider>
+
+            <ModalWrapper isOpen={isShowEventModal}>
+                <View className='bg-white dark:bg-darkModalBackground' style={styles.modalWrapper}>
+                    <View className='flex-row gap-x-2 w-full justify-between items-center'>
+                        <CustomPressable pressFunction={() => {
+                            console.log(currentDay)
+                            setIsShowEventModal(false)
+                        }} title='Отменить' className='flex flex-row items-center'
+                                         textClassName='text-negative text-[18px]'/>
+                        <Text className='text-black dark:text-white text-[18px]'>Создать</Text>
+                        <CustomPressable pressFunction={() => {
+                            console.log(currentDay)
+                            setIsShowEventModal(false)
+                        }} title='Добавить' className='flex flex-row items-center'
+                                         textClassName='text-negative text-[18px]'/>
+                    </View>
+                    <Text className='text-black dark:text-white'>Вот тут будет создание события в календаре</Text>
+                </View>
+            </ModalWrapper>
         </SafeAreaView>
     );
 };
@@ -180,5 +201,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: -7
+    },
+    modalWrapper: {
+        width: '100%',
+        height: '70%',
+        padding: 20,
+        borderRadius: 10,
+        rowGap: 15
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 20
     },
 });

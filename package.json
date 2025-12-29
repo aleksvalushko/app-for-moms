@@ -21,6 +21,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@reduxjs/toolkit": "^2.9.1",
+    "dayjs": "^1.11.19",
     "expo": "^54.0.29",
     "expo-blur": "~15.0.8",
     "expo-constants": "~18.0.12",
