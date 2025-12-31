@@ -1,6 +1,7 @@
 import {
     FlatList,
     View,
+    Text,
     StyleSheet,
 } from "react-native";
 import React, {useState} from "react";
@@ -97,7 +98,7 @@ export const Index = () => {
         <CustomTouchableOpacity pressFunction={() => goToFamilyMember(item)}
                                 className='flex-1 justify-start bg-listElement my-[5px] min-h-[50px]'
                                 style={styles.item}>
-            <CustomText className='flex-1 justify-start text-white text-[25px]'>{item.name}</CustomText>
+            <Text className='flex-1 justify-start text-white text-[25px]'>{item.name}</Text>
             <CustomPressable iconName='edit' className='justify-center items-center'
                              pressFunction={() => getFamilyMemberFunc(item)}/>
             <CustomPressable iconName='delete' className='justify-center items-center'

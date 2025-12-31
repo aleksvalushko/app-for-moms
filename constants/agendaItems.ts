@@ -118,7 +118,7 @@ export function getMarkedDates() {
     const marked = {};
 
     agendaItems.forEach(item => {
-        // NOTE: only mark dates with data
+        // only mark dates with data
         if (item.data && item.data.length > 0) {
             marked[item.title] = {marked: true};
         } else {
