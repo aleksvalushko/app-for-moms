@@ -1,29 +1,39 @@
-import {KeyboardTypeOptions, StyleProp, StyleSheet, TextInput, TextStyle, View} from 'react-native';
+import {KeyboardTypeOptions, StyleProp, StyleSheet, TextInput, TextStyle, View, Text} from 'react-native';
 import React, {useEffect, useState} from "react";
 import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity";
 import {useColorScheme} from "nativewind";
 
 type PROPS = {
+    label?: string;
+    labelClassName?: string;
     className?: string;
     placeholder?: string;
     placeholderTextColor?: string;
     keyboardType?: KeyboardTypeOptions;
     value: string;
     onChangeText: (value: string) => void;
+    multiline?: boolean;
+    numberOfLines?: number;
     secureTextEntry?: boolean;
     autoFocus?: boolean;
+    clearable?: boolean;
     style?: StyleProp<TextStyle> | undefined;
 }
 
 const CustomTextInput: React.FC<PROPS> = ({
+                                              label,
+                                              labelClassName,
                                               className,
                                               placeholder,
                                               placeholderTextColor,
                                               keyboardType,
                                               value,
                                               onChangeText,
+                                              multiline = false,
+                                              numberOfLines,
                                               secureTextEntry = false,
                                               autoFocus = false,
+                                              clearable = true,
                                               style
                                           }) => {
     const {colorScheme} = useColorScheme();
@@ -39,29 +49,32 @@ const CustomTextInput: React.FC<PROPS> = ({
         setIsPasswordVisible(secureTextEntry);
     }, []);
 
-    return <View style={styles.container}>
-        <TextInput style={[{...style}, styles.input, textStyle]} placeholder={placeholder}
-                   placeholderTextColor={placeholderTextColor} keyboardType={keyboardType}
-                   className={`${className} border-primary text-black dark:text-white`} autoFocus={autoFocus}
-                   secureTextEntry={isPasswordVisible} value={value}
-                   onChangeText={onChangeText}/>
-        {
-            value && secureTextEntry && isPasswordVisible &&
-            <CustomTouchableOpacity iconName="eye" style={styles.showPasswordButton}
-                                          pressFunction={() => setIsPasswordVisible(false)} size={22}
-                                          color={textStyle.color}/>
-        }
-        {
-            value && secureTextEntry && !isPasswordVisible &&
-            <CustomTouchableOpacity iconName="eye-invisible" style={styles.showPasswordButton}
-                                          pressFunction={() => setIsPasswordVisible(true)} size={22}
-                                          color={textStyle.color}/>
-        }
-        {
-            value && <CustomTouchableOpacity iconName="close-circle" style={styles.clearButton}
-                                                   pressFunction={() => onChangeText('')} size={22}
-                                                   color={textStyle.color}/>
-        }
+    return <View className='flex flex-column'>
+        {label && <Text className={labelClassName}>{label}</Text>}
+        <View className='w-full' style={styles.container}>
+            <TextInput style={[{...style}, styles.input, textStyle]} placeholder={placeholder}
+                       placeholderTextColor={placeholderTextColor} keyboardType={keyboardType}
+                       className={`${className} border-primary text-black dark:text-white`} autoFocus={autoFocus}
+                       secureTextEntry={isPasswordVisible} value={value} multiline={multiline} numberOfLines={numberOfLines}
+                       onChangeText={onChangeText}/>
+            {
+                value && secureTextEntry && isPasswordVisible &&
+                <CustomTouchableOpacity iconName="eye" style={styles.showPasswordButton}
+                                        pressFunction={() => setIsPasswordVisible(false)} size={22}
+                                        color={textStyle.color}/>
+            }
+            {
+                value && secureTextEntry && !isPasswordVisible &&
+                <CustomTouchableOpacity iconName="eye-invisible" style={styles.showPasswordButton}
+                                        pressFunction={() => setIsPasswordVisible(true)} size={22}
+                                        color={textStyle.color}/>
+            }
+            {
+                clearable && value && <CustomTouchableOpacity iconName="close-circle" style={styles.clearButton}
+                                                 pressFunction={() => onChangeText('')} size={22}
+                                                 color={textStyle.color}/>
+            }
+        </View>
     </View>
 }
 
