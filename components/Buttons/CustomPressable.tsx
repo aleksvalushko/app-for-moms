@@ -2,6 +2,8 @@ import {Pressable, StyleProp, StyleSheet, TextStyle, ViewStyle, Text} from 'reac
 import React from "react";
 import Animated, {useSharedValue, useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import {useAvailableIcons} from "@/hooks/useAvailableIcons";
+import {COLORS} from "@/constants/colors";
+import {useColorScheme} from "nativewind";
 
 type PROPS = {
     title?: string;
@@ -22,6 +24,7 @@ const CustomPressable = ({
                              className,
                              textClassName,
                              pressFunction,
+                             disabled,
                              style,
                              iconName,
                              size = 24,
@@ -29,6 +32,7 @@ const CustomPressable = ({
                              isLeftIcon,
                              rounded
                          }: PROPS) => {
+    const {colorScheme} = useColorScheme();
     const scale = useSharedValue(1);
 
     const animatedContainer = useAnimatedStyle(() => ({
@@ -49,10 +53,10 @@ const CustomPressable = ({
 
     return (
         <Animated.View style={[animatedContainer, {...style}]}>
-            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} className={className}
+            <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} className={className} disabled={disabled}
                        style={[{...style}, styles.button, rounded && styles.roundedButton]}>
                 {isLeftIcon && <Icon/>}
-                {title && !rounded && <Text className={textClassName}>{title}</Text>}
+                {title && !rounded && <Text className={textClassName} style={disabled && {color: COLORS[colorScheme].colors.disabledPressable}}>{title}</Text>}
                 {!isLeftIcon && <Icon/>}
             </Pressable>
         </Animated.View>
