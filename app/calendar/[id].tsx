@@ -1,19 +1,23 @@
 import React, {useRef, useCallback, useState} from 'react';
-import {Animated, Easing, StyleSheet, View, Text} from 'react-native';
-import {ExpandableCalendar, AgendaList, CalendarProvider, WeekCalendar, LocaleConfig} from 'react-native-calendars';
+import {StyleSheet, View, Text} from 'react-native';
+import {
+    AgendaList,
+    CalendarProvider,
+    LocaleConfig,
+    Calendar
+} from 'react-native-calendars';
 import {agendaItems, getMarkedDates} from '@/constants/agendaItems';
 import AgendaItem from '@/components/AgendaItem';
 import {getTheme, darkThemeColor} from '@/mocks/theme';
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import {useAppSelector} from "@/hooks";
-import CustomTouchableOpacity from "@/components/Buttons/CustomTouchableOpacity";
 import {COLORS} from "@/constants/colors";
 import {useColorScheme} from "nativewind";
 import {useUser} from "@/hooks/useUser";
 import GoBackButton from "@/components/Buttons/GoBackButton";
 import CustomPressable from "@/components/Buttons/CustomPressable";
-import ModalWrapper from "@/components/Modals/ModalWrapper";
 import dayjs from 'dayjs';
+import AddCalendarEvent from "@/ui/Modals/AddCalendarEvent";
 
 LocaleConfig.locales['ru'] = {
     monthNames: [
@@ -39,24 +43,34 @@ LocaleConfig.defaultLocale = 'ru';
 
 const ITEMS: any[] = agendaItems;
 
-type PROPS = {
-    weekView?: boolean;
-}
-
-// const CHEVRON = require('@/img/next.png');
-
-const ExpandableCalendarScreen = (props: PROPS) => {
-    const {weekView} = props;
+const ExpandableCalendarScreen = () => {
     const [currentDay, setCurrentDay] = useState<string>(dayjs().format('YYYY-MM-DD'));
     const marked = useRef(getMarkedDates());
-    const theme = useRef(getTheme());
     const todayBtnTheme = useRef({
-        todayButtonTextColor: darkThemeColor
+        todayButtonTextColor: darkThemeColor,
     });
     const {colorScheme} = useColorScheme();
     const {user} = useUser();
     const [isShowEventModal, setIsShowEventModal] = useState<boolean>(false);
     const isDarkMode = colorScheme === 'dark';
+
+    const theme = React.useMemo(
+        () => getTheme(colorScheme),
+        [colorScheme],
+    );
+
+    const markedDates = React.useMemo(() => {
+        const copy = {...marked.current};
+
+        if (currentDay) {
+            copy[currentDay] = {
+                ...(copy[currentDay] || {}),
+                selected: true,
+            };
+        }
+
+        return copy;
+    }, [currentDay]);
 
     const familyMember = useAppSelector(state => {
         return state.familyMembers.familyMember;
@@ -66,41 +80,9 @@ const ExpandableCalendarScreen = (props: PROPS) => {
         return <AgendaItem item={item}/>;
     }, []);
 
-    const calendarRef = useRef<{ toggleCalendarPosition: () => boolean }>(null);
-    const rotation = useRef(new Animated.Value(0));
-
-    const toggleCalendarExpansion = useCallback(() => {
-        const isOpen = calendarRef.current?.toggleCalendarPosition();
-        Animated.timing(rotation.current, {
-            toValue: isOpen ? 1 : 0,
-            duration: 200,
-            useNativeDriver: true,
-            easing: Easing.out(Easing.ease)
-        }).start();
-    }, []);
-
-    const renderHeader = useCallback(
-        (date) => {
-            const rotationInDegrees = rotation.current.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0deg', '-180deg']
-            });
-            return (
-                <CustomTouchableOpacity style={styles.header} pressFunction={toggleCalendarExpansion}>
-                    <Text style={styles.headerTitle} className='text-black dark:text-white'>{date?.toString('MMMM yyyy')}</Text>
-                    {/*<Animated.Image source={CHEVRON} style={{transform: [{rotate: '90deg'}, {rotate: rotationInDegrees}], color: 'white'}}/>*/}
-                </CustomTouchableOpacity>
-            );
-        },
-        [toggleCalendarExpansion]
-    );
-
-    const onCalendarToggled = useCallback(
-        (isOpen: boolean) => {
-            rotation.current.setValue(isOpen ? 1 : 0);
-        },
-        [rotation]
-    );
+    const renderHeader = (date) => {
+        return <Text style={styles.headerTitle} className='text-black dark:text-white'>{date?.toString('MMMM yyyy')}</Text>
+    };
 
     return (
         <SafeAreaView className='flex-1 justify-center items-center p-[10px]'>
@@ -119,19 +101,14 @@ const ExpandableCalendarScreen = (props: PROPS) => {
                         theme={todayBtnTheme.current}
                         todayBottomMargin={5}
                     >
-                        {weekView ? (
-                            <WeekCalendar firstDay={1} markedDates={marked.current}/>
-                        ) : (
-                            <ExpandableCalendar
+                            <Calendar
                                 renderHeader={renderHeader}
-                                ref={calendarRef}
-                                onCalendarToggled={onCalendarToggled}
-                                theme={theme.current}
+                                theme={theme}
                                 firstDay={1}
-                                markedDates={marked.current}
-                                onDayPress={(day) => setCurrentDay(day.dateString)}
+                                markedDates={markedDates}
+                                enableSwipeMonths
+                                onDayPress={(day) =>setCurrentDay(day.dateString)}
                             />
-                        )}
                         <AgendaList
                             sections={ITEMS}
                             renderItem={renderItem}
@@ -143,24 +120,7 @@ const ExpandableCalendarScreen = (props: PROPS) => {
                 </SafeAreaView>
             </SafeAreaProvider>
 
-            <ModalWrapper isOpen={isShowEventModal}>
-                <View className='bg-white dark:bg-darkModalBackground' style={styles.modalWrapper}>
-                    <View className='flex-row gap-x-2 w-full justify-between items-center'>
-                        <CustomPressable pressFunction={() => {
-                            console.log(currentDay)
-                            setIsShowEventModal(false)
-                        }} title='Отменить' className='flex flex-row items-center'
-                                         textClassName='text-negative text-[18px]'/>
-                        <Text className='text-black dark:text-white text-[18px]'>Создать</Text>
-                        <CustomPressable pressFunction={() => {
-                            console.log(currentDay)
-                            setIsShowEventModal(false)
-                        }} title='Добавить' className='flex flex-row items-center'
-                                         textClassName='text-negative text-[18px]'/>
-                    </View>
-                    <Text className='text-black dark:text-white'>Вот тут будет создание события в календаре</Text>
-                </View>
-            </ModalWrapper>
+            <AddCalendarEvent isShowEventModal={isShowEventModal} setIsShowEventModal={setIsShowEventModal} />
         </SafeAreaView>
     );
 };
@@ -201,16 +161,5 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: -7
-    },
-    modalWrapper: {
-        width: '100%',
-        height: '70%',
-        padding: 20,
-        borderRadius: 10,
-        rowGap: 15
-    },
-    modalText: {
-        fontSize: 18,
-        marginBottom: 20
     },
 });
